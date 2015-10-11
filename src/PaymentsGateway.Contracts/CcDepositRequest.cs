@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace PaymentsGateway.Contracts
 {
-    public class Class1
+    public class CcDepositRequest
     {
+        public int AccountNumber { get; set; }
+        public int CardId { get; set; }
+        public double Amount { get; set; }
     }
 }
