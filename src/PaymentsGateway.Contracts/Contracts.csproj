@@ -46,6 +46,7 @@
     <Compile Include="ClearingRequest.cs" />
     <Compile Include="ClearingResponse.cs" />
     <Compile Include="DepositStatus.cs" />
+    <Compile Include="DepositValidationResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
