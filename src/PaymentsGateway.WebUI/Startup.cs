@@ -1,9 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
+using PaymentsGateway.WebUI;
 
-[assembly: OwinStartup(typeof(PaymentsGateway.WebUI.Startup))]
+[assembly: OwinStartup(typeof (Startup))]
 
 namespace PaymentsGateway.WebUI
 {

@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using Automatonymous;
-using Automatonymous.Events;
-using Automatonymous.Lifts;
-using MassTransit;
-using MassTransit.Saga;
 using PaymentsGateway.Contracts;
 
 namespace PaymentsGateway.Gateway
@@ -23,36 +16,52 @@ namespace PaymentsGateway.Gateway
             Initially(When(DepositRequested)
                 .Then(context => context.Instance.DepositRequest = context.Data)
                 .ThenAsync(context => new DepositValidator(context.Data, //TODO: resolve validator with IOC
-                (response) => { this.CreateEventLift(DepositValidated).Raise(context.Instance, response); })
-                .ValidateAsync())
+                    response => { this.CreateEventLift(DepositValidated).Raise(context.Instance, response); })
+                    .ValidateAsync())
                 .TransitionTo(Validating));
 
             During(Validating,
                 When(DepositValidated, filter => filter.Data.IsValid)
-                .Request(ClearingFlow, context => new ClearingRequestFactory().FromDepositRequest(context.Data.Request)) //TODO: resolve factory with IOC
-                .TransitionTo(ClearingFlow.Pending),
-
-                  When(DepositValidated, filter => !filter.Data.IsValid)
-                .Publish(context => new DepositResponseFactory().FromValidationResponse(context.Data))
-                .Finalize());
-
+                    .Request(ClearingFlow,
+                        context => new ClearingRequestFactory().FromDepositRequest(context.Data.Request))
+                    //TODO: resolve factory with IOC
+                    .TransitionTo(ClearingFlow.Pending),
+                When(DepositValidated, filter => !filter.Data.IsValid)
+                    .Publish(
+                        context =>
+                            new DepositResponseFactory().FromFailedValidationResponse(context.Instance.TransactionId,
+                                context.Data))
+                    .Finalize());
 
             During(ClearingFlow.Pending,
-                When(ClearingFlow.Completed, filter => filter.Data.IsAuthorized)
+                When(ClearingFlow.Completed, filter => filter.Data.ClearingStatus == ClearingStatus.Authorized)
+                    .Then(context => CreditCustomerAccount(context.Instance.DepositRequest, context.Data,
+                        response => { this.CreateEventLift(Funded).Raise(context.Instance, response); }))
+                    .Catch<ApplicationException>(x => x.TransitionTo(Final)) //TODO: Example of compensation
                     .TransitionTo(Funding),
-                When(ClearingFlow.Completed, filter => !filter.Data.IsAuthorized)
-                    .Publish(context => new DepositResponseFactory().FromClearingResponse(context.Data))
+                When(ClearingFlow.Completed, filter => filter.Data.ClearingStatus == ClearingStatus.Rejected)
+                    .Publish(
+                        context =>
+                            new DepositResponseFactory().FromClearingResponse(context.Instance.DepositRequest,
+                                context.Data))
                     .Finalize(),
                 When(ClearingFlow.Faulted)
-                .Publish(context => new DepositResponseFactory().FromClearingFault(context.Data))
-                .Finalize(),
-                 When(ClearingFlow.TimeoutExpired)
-                .Publish(context => new DepositResponseFactory().FromClearingTimeout(context.Data))
-                .Finalize());
+                    .Publish(context => new DepositResponseFactory().FromClearingFault(context.Data))
+                    .Finalize(),
+                When(ClearingFlow.TimeoutExpired)
+                    .Publish(
+                        context =>
+                            new DepositResponseFactory().FromClearingTimeout(context.Instance.TransactionId,
+                                context.Instance.DepositRequest, context.Data))
+                    .Finalize());
 
+            During(Funding,
+                When(Funded)
+                    .Publish(x => x.Data)
+                    .Finalize());
 
-            //When(Cleared).Request(ClearingDeposit,context=> new ClearingRequestFactory().FromDepositRequest(context.)).TransitionTo(ClearingDeposit.)
-
+            //TODO: DuringAny() - give example of duringany
+            //TODO: Finally(); - give example of something done on final transition
         }
 
         public State Validating { get; private set; }
@@ -61,82 +70,16 @@ namespace PaymentsGateway.Gateway
 
         public Request<GatewaySagaState, ClearingRequest, ClearingResponse> ClearingFlow { get; private set; }
 
-
         public Event<CcDepositRequest> DepositRequested { get; private set; }
         public Event<DepositValidationResponse> DepositValidated { get; private set; }
         public Event<CcDepositResponse> Funded { get; private set; }
-    }
 
-    public class DepositValidator
-    {
-        private readonly CcDepositRequest _request;
-        private readonly Action<DepositValidationResponse> _onValidated;
-
-        public DepositValidator(CcDepositRequest request, Action<DepositValidationResponse> onValidated)
+        private void CreditCustomerAccount(CcDepositRequest depositRequest, ClearingResponse response,
+            Action<CcDepositResponse> onFunded)
         {
-            _request = request;
-            _onValidated = onValidated;
+            Debug.WriteLine(
+                $"Funding Customer Account. TransactionId={response.TransactionId} AccountNumber={depositRequest.AccountNumber} Amount={depositRequest.Amount} Currency={depositRequest.Currency}");
+            onFunded(new DepositResponseFactory().FromClearingResponse(depositRequest, response));
         }
-
-
-        public void Validate()
-        {
-
-        }
-
-        public Task ValidateAsync()
-        {
-
-        }
-    }
-
-    public class ClearingRequestFactory
-    {
-        public ClearingRequest FromDepositRequest(CcDepositRequest request)
-        {
-            return new ClearingRequest()
-            {
-                AccountNumber = request.AccountNumber,
-                Amount = request.Amount,
-                CardToken = "ABC123", //TODO: Call Tokenization Service to get token for saved card id
-                CardType = CardType.MasterCard, //TODO: Get card type from tokenization service
-                Currency = "EUR" //TODO: Get account currency from customers cache
-            };
-        }
-    }
-
-    public class DepositResponseFactory
-    {
-        public CcDepositResponse FromValidationResponse(DepositValidationResponse validationResponse)
-        {
-            throw new NotImplementedException();
-        }
-
-        public CcDepositResponse FromClearingResponse(ClearingResponse data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public CcDepositResponse FromClearingFault(Fault<ClearingRequest> data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public CcDepositResponse FromClearingTimeout(RequestTimeoutExpired data)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class GatewaySagaState : SagaStateMachineInstance
-    {
-        public GatewaySagaState(Guid correlationId)
-        {
-            CorrelationId = correlationId;
-        }
-
-        public CcDepositRequest DepositRequest { get; set; }
-        public Guid CorrelationId { get; set; }
-        public State CurrentState { get; set; }
     }
 }

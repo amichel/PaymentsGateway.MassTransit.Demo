@@ -4,6 +4,7 @@ namespace PaymentsGateway.Contracts
     {
         Failed,
         Success,
+        Rejected,
         Invalid,
         Timedout
     }

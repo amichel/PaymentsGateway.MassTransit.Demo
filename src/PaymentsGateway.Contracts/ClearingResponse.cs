@@ -1,10 +1,12 @@
+using System;
+
 namespace PaymentsGateway.Contracts
 {
     public class ClearingResponse
     {
-        public bool IsAuthorized { get; set; }
-        public long TransactionId { get; set; }
-        public long ProviderTransactionId { get; set; }
+        public ClearingStatus ClearingStatus { get; set; }
+        public Guid TransactionId { get; set; }
+        public string ProviderTransactionId { get; set; }
         public int ResponseCode { get; set; }
         public int ErrorCode { get; set; }
     }

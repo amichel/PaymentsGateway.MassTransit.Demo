@@ -48,6 +48,10 @@
       <HintPath>..\PaymentsGateway.Gateway\packages\Automatonymous.3.0.6\lib\net45\Automatonymous.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\PaymentsGateway.Gateway\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MassTransit, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
       <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.3.0.13\lib\net45\MassTransit.dll</HintPath>
       <Private>True</Private>

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace PaymentsGateway.Contracts
 {
@@ -11,10 +7,5 @@ namespace PaymentsGateway.Contracts
         public CcDepositRequest Request { get; set; }
         public bool IsValid { get; set; }
         public IEnumerable<ValidationResult> ValidationResults { get; set; }
-    }
-
-    public enum ValidationResult
-    {
-
     }
 }
