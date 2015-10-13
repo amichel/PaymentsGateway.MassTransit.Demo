@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "..\PaymentsGat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI", "..\PaymentsGateway.WebUI\WebUI.csproj", "{53533BBE-8B3B-4536-8EE8-C4DDBAA0B4D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentsGateway.Tests", "..\PaymentsGateway.Tests\PaymentsGateway.Tests.csproj", "{70B21D4B-FD62-427D-B033-F1E1B210677D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "..\PaymentsGateway.Tests\Tests.csproj", "{70B21D4B-FD62-427D-B033-F1E1B210677D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clearing", "..\PaymentsGateway.Clearing\Clearing.csproj", "{152F91AB-E189-4730-A199-2FF3F7FE20F1}"
 EndProject
