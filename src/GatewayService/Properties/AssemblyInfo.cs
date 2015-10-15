@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("PaymentsGateway.Tests")]
+[assembly: AssemblyTitle("GatewayService")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("PaymentsGateway.Tests")]
+[assembly: AssemblyProduct("GatewayService")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("70b21d4b-fd62-427d-b033-f1e1b210677d")]
+[assembly: Guid("fe9d70d3-e409-4e30-8c00-0ea453e71fb9")]
 
 // Version information for an assembly consists of the following four values:
 //

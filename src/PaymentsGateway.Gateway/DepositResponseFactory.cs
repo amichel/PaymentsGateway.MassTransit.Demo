@@ -6,7 +6,17 @@ using PaymentsGateway.Contracts;
 
 namespace PaymentsGateway.Gateway
 {
-    public class DepositResponseFactory
+    public interface IDepositResponseFactory
+    {
+        CcDepositResponse FromFailedValidationResponse(Guid transactionId, DepositValidationResponse source);
+        CcDepositResponse FromClearingResponse(CcDepositRequest request, ClearingResponse source);
+        CcDepositResponse FromClearingFault(Fault<ClearingRequest> source);
+
+        CcDepositResponse FromClearingTimeout(Guid transactionId, CcDepositRequest request,
+            RequestTimeoutExpired source);
+    }
+
+    public class DepositResponseFactory : IDepositResponseFactory
     {
         public CcDepositResponse FromFailedValidationResponse(Guid transactionId, DepositValidationResponse source)
         {

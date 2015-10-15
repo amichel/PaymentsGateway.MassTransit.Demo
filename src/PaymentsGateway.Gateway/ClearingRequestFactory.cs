@@ -2,7 +2,7 @@ using PaymentsGateway.Contracts;
 
 namespace PaymentsGateway.Gateway
 {
-    public class ClearingRequestFactory
+    public class ClearingRequestFactory : IClearingRequestFactory
     {
         public ClearingRequest FromDepositRequest(CcDepositRequest request)
         {

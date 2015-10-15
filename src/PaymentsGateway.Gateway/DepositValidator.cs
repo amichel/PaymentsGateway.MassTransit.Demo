@@ -6,7 +6,7 @@ using PaymentsGateway.Contracts;
 
 namespace PaymentsGateway.Gateway
 {
-    public class DepositValidator
+    public class DepositValidator : IDepositValidator
     {
         private readonly Action<DepositValidationResponse> _onValidated;
         private readonly CcDepositRequest _request;

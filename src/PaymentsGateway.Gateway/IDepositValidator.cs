@@ -1,10 +1,10 @@
-﻿using System;
-using PaymentsGateway.Contracts;
+﻿using System.Threading.Tasks;
 
 namespace PaymentsGateway.Gateway
 {
     public interface IDepositValidator
     {
-        void ValidateRequest(CcDepositRequest request, Action<DepositValidationResponse> onValidated);
+        void Validate();
+        Task ValidateAsync();
     }
 }
