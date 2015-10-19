@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Automatonymous;
+using MassTransit;
 using PaymentsGateway.Contracts;
 
 namespace PaymentsGateway.Gateway
@@ -20,33 +21,36 @@ namespace PaymentsGateway.Gateway
 
             InstanceState(x => x.CurrentState);
 
+            Event(() => DepositRequested, x => x.CorrelateBy(request => request.DepositRequest.CorellationKey, context => context.Message.CorellationKey)
+                                              .SelectId(context => NewId.NextGuid()));
+
             Request(() => ClearingFlow, state => state.TransactionId, clearingRequestSettings);
 
-            Event(() => DepositRequested, x => x.CorrelateBy(request => request.DepositRequest.CorellationKey, context => context.Message.CorellationKey)
-                                                .SelectId(context => Guid.NewGuid()));
-
-
             Initially(When(DepositRequested)
-                .Then(context => context.Instance.DepositRequest = context.Data)
+                .Then(context =>
+                {
+                    context.Instance.TransactionId = context.Instance.CorrelationId;
+                    context.Instance.DepositRequest = context.Data.Copy();
+                })
+                .TransitionTo(Validating)
                 .ThenAsync(context => _depositValidatorFactory.CreateCcDepositValidator(context.Data,
                     response => { this.CreateEventLift(DepositValidated).Raise(context.Instance, response); })
-                    .ValidateAsync())
-                .TransitionTo(Validating));
+                    .ValidateAsync()));
 
             During(Validating,
                 When(DepositValidated, filter => filter.Data.IsValid)
+                    .TransitionTo(ClearingFlow.Pending)
                     .Request(ClearingFlow,
-                        context => _clearingRequestFactory.FromDepositRequest(context.Data.Request))
-                    .TransitionTo(ClearingFlow.Pending),
+                        context => _clearingRequestFactory.FromDepositRequest(context.Instance.TransactionId.GetValueOrDefault(), context.Data.Request)),
                 When(DepositValidated, filter => !filter.Data.IsValid)
                     .Then(context => this.RaiseEvent(context.Instance, Completed,
-                            _responseFactory.FromFailedValidationResponse(context.Instance.TransactionId, context.Data))));
+                            _responseFactory.FromFailedValidationResponse(context.Instance.TransactionId.GetValueOrDefault(), context.Data))));
 
             During(ClearingFlow.Pending,
                 When(ClearingFlow.Completed, filter => filter.Data.ClearingStatus == ClearingStatus.Authorized)
+                    .TransitionTo(Funding)
                     .Then(context => new CustomerBalance().Credit(context.Instance.DepositRequest, context.Data,
-                        response => { this.CreateEventLift(Completed).Raise(context.Instance, response); }))
-                    .TransitionTo(Funding),
+                        response => { this.CreateEventLift(Completed).Raise(context.Instance, response); })),
                 When(ClearingFlow.Completed, filter => filter.Data.ClearingStatus == ClearingStatus.Rejected)
                     .Then(context => this.RaiseEvent(context.Instance, Completed,
                        _responseFactory.FromClearingResponse(context.Instance.DepositRequest,
@@ -54,8 +58,7 @@ namespace PaymentsGateway.Gateway
                 When(ClearingFlow.Faulted)
                     .Then(context => _responseFactory.FromClearingFault(context.Data)),
                 When(ClearingFlow.TimeoutExpired)
-                    .Then(context =>
-                       _responseFactory.FromClearingTimeout(context.Instance.TransactionId,
+                    .Then(context => _responseFactory.FromClearingTimeout(context.Instance.TransactionId.GetValueOrDefault(),
                             context.Instance.DepositRequest, context.Data)));
 
             DuringAny(When(Completed)
@@ -69,6 +72,7 @@ namespace PaymentsGateway.Gateway
 
         public State Validating { get; private set; }
         public State Funding { get; private set; }
+
         public Request<GatewaySagaState, ClearingRequest, ClearingResponse> ClearingFlow { get; private set; }
 
         public Event<CcDepositRequest> DepositRequested { get; private set; }

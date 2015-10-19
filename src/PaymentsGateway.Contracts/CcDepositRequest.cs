@@ -8,5 +8,7 @@
         public string Currency { get; set; }
 
         public string CorellationKey => $"{AccountNumber}#{CardId}";
+
+        public CcDepositRequest Copy() => MemberwiseClone() as CcDepositRequest;
     }
 }

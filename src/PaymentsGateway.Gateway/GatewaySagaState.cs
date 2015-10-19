@@ -11,7 +11,7 @@ namespace PaymentsGateway.Gateway
             CorrelationId = correlationId;
         }
 
-        public Guid TransactionId => CorrelationId;
+        public Guid? TransactionId { get; set; }
         //use Saga correllation id for transaction id. In real service of course it will be generated in DB when payment transaction is initiated.
         public CcDepositRequest DepositRequest { get; set; }
         public CcDepositResponse Response { get; set; }

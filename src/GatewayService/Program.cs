@@ -13,7 +13,6 @@ namespace GatewayService
         {
             var exitCode = (int)HostFactory.Run(x => x.Service<GatewayService>().StartAutomatically());
             Console.WriteLine($"{nameof(GatewayService)} Started. Exit Code = {exitCode}");
-            Console.ReadKey();
             return exitCode;
         }
     }

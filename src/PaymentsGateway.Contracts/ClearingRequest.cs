@@ -1,8 +1,9 @@
 using System;
+using MassTransit;
 
 namespace PaymentsGateway.Contracts
 {
-    public class ClearingRequest
+    public class ClearingRequest : CorrelatedBy<Guid>
     {
         public int AccountNumber { get; set; }
         public Guid TransactionId { get; set; }
@@ -10,5 +11,6 @@ namespace PaymentsGateway.Contracts
         public string Currency { get; set; }
         public double Amount { get; set; }
         public string CardToken { get; set; }
+        public Guid CorrelationId => TransactionId;
     }
 }

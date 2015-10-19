@@ -1,9 +1,10 @@
-﻿using PaymentsGateway.Contracts;
+﻿using System;
+using PaymentsGateway.Contracts;
 
 namespace PaymentsGateway.Gateway
 {
     public interface IClearingRequestFactory
     {
-        ClearingRequest FromDepositRequest(CcDepositRequest request);
+        ClearingRequest FromDepositRequest(Guid transactionId, CcDepositRequest request);
     }
 }

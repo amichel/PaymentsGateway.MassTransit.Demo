@@ -9,6 +9,7 @@ using MassTransit;
 using MassTransit.QuartzIntegration;
 using MassTransit.RabbitMqTransport;
 using MassTransit.Saga;
+using PaymentsGateway.Contracts;
 using PaymentsGateway.Gateway;
 using Topshelf;
 using Topshelf.Logging;
@@ -27,14 +28,8 @@ namespace GatewayService
 
         }
 
-        private void CreateServiceBus()
+        private void ConfigureServiceBus()
         {
-            _machine = new GatewaySagaBuilder().WithDefaultImplementation()
-                                                .WithClearingRequestSettings(ServiceRequestSettings.ClearingRequestSettings())
-                                                .Build();
-
-            _repository = new Lazy<ISagaRepository<GatewaySagaState>>(() => new InMemorySagaRepository<GatewaySagaState>());
-
             _busControl = Bus.Factory.CreateUsingRabbitMq(x =>
             {
                 IRabbitMqHost host = x.Host(new Uri(ConfigurationManager.AppSettings["RabbitMQHost"]), h =>
@@ -48,20 +43,27 @@ namespace GatewayService
                     e.PrefetchCount = 8;
                     e.StateMachineSaga(_machine, _repository.Value);
                 });
-
-                x.ReceiveEndpoint(host, "gateway_scheduler", e =>
-                {
-                    x.UseMessageScheduler(e.InputAddress);
-                    e.PrefetchCount = 1;
-                });
             });
 
             _busHandle = _busControl.Start();
         }
 
+        private void ConfigureSaga()
+        {
+            _machine = new GatewaySagaBuilder().WithDefaultImplementation()
+                                                            .WithClearingRequestSettings(ServiceRequestSettings.ClearingRequestSettings())
+                                                            .Build();
+
+            _repository = new Lazy<ISagaRepository<GatewaySagaState>>(() => new InMemorySagaRepository<GatewaySagaState>());
+        }
+
         public bool Start(HostControl hostControl)
         {
-            CreateServiceBus();
+            ConfigureSaga();
+            ConfigureServiceBus();
+
+            Task.Run(() => _busControl.Publish(new CcDepositRequest()));
+
             return true;
         }
 
