@@ -32,6 +32,7 @@ namespace PaymentsGateway.Gateway
                     context.Instance.TransactionId = context.Instance.CorrelationId;
                     context.Instance.DepositRequest = context.Data.Copy();
                 })
+                .Respond(context => _responseFactory.FromPendingRequest(context.Instance.TransactionId.GetValueOrDefault(), context.Instance.DepositRequest))
                 .TransitionTo(Validating)
                 .ThenAsync(context => _depositValidatorFactory.CreateCcDepositValidator(context.Data,
                     response => { this.CreateEventLift(DepositValidated).Raise(context.Instance, response); })

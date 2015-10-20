@@ -1,8 +1,34 @@
 ﻿@model dynamic
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewBag.Title = "CcDeposit";
 }
 
-<h2>title</h2>
+@Scripts.Render("~/Scripts/jquery.signalR-2.2.0.js")
+
+<button id="deposit"></button>
+
+<script src="~/Scripts/hubs.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var accountNumber = 123;
+        // Declare a proxy to reference the hub.
+        var hub = $.connection.paymentsHub;
+        hub.headers.add("AccountNumber", accountNumber);
+
+        // Create a callback function that the hub can call to send response from bus consumer
+        hub.client.onDepositResponse = function (response) {
+            Console.Write(response);
+        };
+
+        // Start the connection.
+        $.connection.hub.start().done(function () {
+            $('#deposit').click(function () {
+                // Call the deposit method on the hub.
+                hub.server.ccDeposit({ AccountNumber: accountNumber, CardId: 100, Amount: 250, Currency: "EUR" });
+            });
+        });
+
+        //TODO: no reconnects/etc...
+    });
+</script>

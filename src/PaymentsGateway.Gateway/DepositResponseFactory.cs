@@ -8,6 +8,7 @@ namespace PaymentsGateway.Gateway
 {
     public interface IDepositResponseFactory
     {
+        CcDepositResponse FromPendingRequest(Guid transactionId, CcDepositRequest request);
         CcDepositResponse FromFailedValidationResponse(Guid transactionId, DepositValidationResponse source);
         CcDepositResponse FromClearingResponse(CcDepositRequest request, ClearingResponse source);
         CcDepositResponse FromClearingFault(Fault<ClearingRequest> source);
@@ -18,6 +19,16 @@ namespace PaymentsGateway.Gateway
 
     public class DepositResponseFactory : IDepositResponseFactory
     {
+        public CcDepositResponse FromPendingRequest(Guid transactionId, CcDepositRequest request)
+        {
+            return new CcDepositResponse
+            {
+                AccountNumber = request.AccountNumber,
+                Status = DepositStatus.Pending,
+                TransactionId = transactionId
+            };
+        }
+
         public CcDepositResponse FromFailedValidationResponse(Guid transactionId, DepositValidationResponse source)
         {
             if (source.IsValid)
@@ -64,7 +75,7 @@ namespace PaymentsGateway.Gateway
             return new CcDepositResponse
             {
                 AccountNumber = request.AccountNumber,
-                Status = DepositStatus.Failed,
+                Status = DepositStatus.Timedout,
                 ErrorMessage = $"Clearing Api call timed out. Expiration Time={source.ExpirationTime}",
                 TransactionId = transactionId
             };

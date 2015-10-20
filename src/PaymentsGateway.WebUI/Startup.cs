@@ -10,7 +10,7 @@ namespace PaymentsGateway.WebUI
     {
         public void Configuration(IAppBuilder app)
         {
-            app.MapSignalR();
+            IocConfig.ConfigureSignalR(app);
         }
     }
 }

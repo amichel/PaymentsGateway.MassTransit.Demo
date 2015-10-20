@@ -587,14 +587,14 @@ intellisense.annotate(_object, {
   },
   'resolve': function() {
     /// <signature>
-    ///   <summary>Resolve a Deferred object and call any doneCallbacks with the given args.</summary>
+    ///   <summary>ConfigureSignalR a Deferred object and call any doneCallbacks with the given args.</summary>
     ///   <param name="args" type="Anything">Optional arguments that are passed to the doneCallbacks.</param>
     ///   <returns type="Deferred" />
     /// </signature>
   },
   'resolveWith': function() {
     /// <signature>
-    ///   <summary>Resolve a Deferred object and call any doneCallbacks with the given context and args.</summary>
+    ///   <summary>ConfigureSignalR a Deferred object and call any doneCallbacks with the given context and args.</summary>
     ///   <param name="context" type="Object">Context passed to the doneCallbacks as the this object.</param>
     ///   <param name="args" type="Array">An optional array of arguments that are passed to the doneCallbacks.</param>
     ///   <returns type="Deferred" />

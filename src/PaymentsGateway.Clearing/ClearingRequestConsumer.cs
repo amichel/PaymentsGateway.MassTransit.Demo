@@ -15,7 +15,7 @@ namespace PaymentsGateway.Clearing
         public Task Consume(ConsumeContext<ClearingRequest> context)
         {
             //Long 3rd party Api call
-            Thread.Sleep(context.Message.Amount > 1000 ? 10000 : 1000);
+            Thread.Sleep(context.Message.Amount > 1000 ? 10000 : 5000);
 
             var clearingStatus = context.Message.AccountNumber % 2 == 0 ? ClearingStatus.Authorized : ClearingStatus.Rejected;
             return context.RespondAsync(new ClearingResponse()

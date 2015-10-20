@@ -32,15 +32,15 @@ namespace GatewayService
         {
             _busControl = Bus.Factory.CreateUsingRabbitMq(x =>
             {
-                IRabbitMqHost host = x.Host(new Uri(ConfigurationManager.AppSettings["RabbitMQHost"]), h =>
+                var host = x.Host(new Uri(ConfigurationManager.AppSettings["RabbitMQHost"]), h =>
                 {
                     h.Username(ConfigurationManager.AppSettings["RabbitMQUser"]);
                     h.Password(ConfigurationManager.AppSettings["RabbitMQPassword"]);
                 });
-
-                x.ReceiveEndpoint(host, "gatewaySaga", e =>
+                
+                x.ReceiveEndpoint(host, "gateway", e =>
                 {
-                    e.PrefetchCount = 8;
+                    e.PrefetchCount = (ushort)Environment.ProcessorCount;
                     e.StateMachineSaga(_machine, _repository.Value);
                 });
             });
@@ -53,7 +53,7 @@ namespace GatewayService
             _machine = new GatewaySagaBuilder().WithDefaultImplementation()
                                                             .WithClearingRequestSettings(ServiceRequestSettings.ClearingRequestSettings())
                                                             .Build();
-
+            
             _repository = new Lazy<ISagaRepository<GatewaySagaState>>(() => new InMemorySagaRepository<GatewaySagaState>());
         }
 
