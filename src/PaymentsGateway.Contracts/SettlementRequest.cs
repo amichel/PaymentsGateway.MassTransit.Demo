@@ -1,15 +1,16 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using MassTransit;
 
 namespace PaymentsGateway.Contracts
 {
-    public class ClearingResponse : CorrelatedBy<Guid>
+    public class SettlementRequest : CorrelatedBy<Guid>
     {
-        public ClearingStatus ClearingStatus { get; set; }
         public Guid TransactionId { get; set; }
         public string ProviderTransactionId { get; set; }
-        public int ResponseCode { get; set; }
-        public int ErrorCode { get; set; }
         public Guid CorrelationId => TransactionId;
     }
 }

@@ -59,12 +59,14 @@
     <Compile Include="CardType.cs" />
     <Compile Include="CcDepositRequest.cs" />
     <Compile Include="CcDepositResponse.cs" />
-    <Compile Include="ClearingRequest.cs" />
-    <Compile Include="ClearingResponse.cs" />
+    <Compile Include="AuthorizationRequest.cs" />
+    <Compile Include="AuthorizationResponse.cs" />
     <Compile Include="ClearingStatus.cs" />
     <Compile Include="DepositStatus.cs" />
     <Compile Include="DepositValidationResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettlementRequest.cs" />
+    <Compile Include="SettlementResponse.cs" />
     <Compile Include="ValidationResult.cs" />
   </ItemGroup>
   <ItemGroup>

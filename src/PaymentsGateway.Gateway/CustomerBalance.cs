@@ -10,7 +10,7 @@ namespace PaymentsGateway.Gateway
         {
         }
 
-        public void Credit(CcDepositRequest depositRequest, ClearingResponse response,
+        public void Credit(CcDepositRequest depositRequest, AuthorizationResponse response,
             Action<CcDepositResponse> onFunded)
         {
             if (depositRequest.Currency == "DEM")

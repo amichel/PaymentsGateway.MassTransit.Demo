@@ -5,9 +5,9 @@ namespace PaymentsGateway.Gateway
 {
     public class ClearingRequestFactory : IClearingRequestFactory
     {
-        public ClearingRequest FromDepositRequest(Guid transactionId, CcDepositRequest request)
+        public AuthorizationRequest FromDepositRequest(Guid transactionId, CcDepositRequest request)
         {
-            return new ClearingRequest
+            return new AuthorizationRequest
             {
                 TransactionId = transactionId,
                 AccountNumber = request.AccountNumber,

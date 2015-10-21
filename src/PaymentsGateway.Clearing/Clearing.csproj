@@ -30,9 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Automatonymous, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Automatonymous.3.0.6\lib\net45\Automatonymous.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Automatonymous">
+      <HintPath>..\PaymentsGateway.Gateway\packages\Automatonymous.3.0.6\lib\net45\Automatonymous.dll</HintPath>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\net20\JetBrains.Annotations.dll</HintPath>
@@ -50,9 +49,8 @@
       <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.RabbitMQ.3.0.14\lib\net45\MassTransit.RabbitMqTransport.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NewId, Version=2.1.3.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
-      <HintPath>..\packages\NewId.2.1.3\lib\net45\NewId.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="NewId">
+      <HintPath>..\PaymentsGateway.Gateway\packages\NewId.2.1.3\lib\net45\NewId.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -73,6 +71,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClearingRequestConsumer.cs" />
+    <Compile Include="ClearingSaga.cs" />
+    <Compile Include="ClearingSagaState.cs" />
+    <Compile Include="IClearingApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

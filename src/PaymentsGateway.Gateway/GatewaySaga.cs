@@ -83,7 +83,7 @@ namespace PaymentsGateway.Gateway
         public State Validating { get; private set; }
         //public State Funding { get; private set; }
 
-        public Request<GatewaySagaState, ClearingRequest, ClearingResponse> ClearingFlow { get; private set; }
+        public Request<GatewaySagaState, AuthorizationRequest, AuthorizationResponse> ClearingFlow { get; private set; }
 
         public Event<CcDepositRequest> DepositRequested { get; private set; }
         public Event<DepositValidationResponse> DepositValidated { get; private set; }

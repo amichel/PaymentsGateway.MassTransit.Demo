@@ -10,8 +10,8 @@ namespace PaymentsGateway.Gateway
     {
         CcDepositResponse FromPendingRequest(Guid transactionId, CcDepositRequest request);
         CcDepositResponse FromFailedValidationResponse(Guid transactionId, DepositValidationResponse source);
-        CcDepositResponse FromClearingResponse(CcDepositRequest request, ClearingResponse source);
-        CcDepositResponse FromClearingFault(Fault<ClearingRequest> source);
+        CcDepositResponse FromClearingResponse(CcDepositRequest request, AuthorizationResponse source);
+        CcDepositResponse FromClearingFault(Fault<AuthorizationRequest> source);
 
         CcDepositResponse FromClearingTimeout(Guid transactionId, CcDepositRequest request,
             RequestTimeoutExpired source);
@@ -43,7 +43,7 @@ namespace PaymentsGateway.Gateway
             };
         }
 
-        public CcDepositResponse FromClearingResponse(CcDepositRequest request, ClearingResponse source)
+        public CcDepositResponse FromClearingResponse(CcDepositRequest request, AuthorizationResponse source)
         {
             return new CcDepositResponse
             {
@@ -58,7 +58,7 @@ namespace PaymentsGateway.Gateway
             };
         }
 
-        public CcDepositResponse FromClearingFault(Fault<ClearingRequest> source)
+        public CcDepositResponse FromClearingFault(Fault<AuthorizationRequest> source)
         {
             return new CcDepositResponse
             {

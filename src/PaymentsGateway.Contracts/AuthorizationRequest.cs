@@ -3,7 +3,7 @@ using MassTransit;
 
 namespace PaymentsGateway.Contracts
 {
-    public class ClearingRequest : CorrelatedBy<Guid>
+    public class AuthorizationRequest : CorrelatedBy<Guid>
     {
         public int AccountNumber { get; set; }
         public Guid TransactionId { get; set; }
