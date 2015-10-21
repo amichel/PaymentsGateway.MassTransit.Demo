@@ -22,13 +22,6 @@ namespace PaymentsGateway.WebUI.IOC
         protected override void Load(ContainerBuilder builder)
         {
             // Registers all consumers with our container
-            //builder.RegisterAssemblyTypes(_assembliesToScan)
-            //    .Where(t =>
-            //    {
-            //        var a = typeof(IConsumer).IsAssignableFrom(t);
-            //        return a;
-            //    })
-            //    .AsSelf();
             builder.RegisterConsumers(_assembliesToScan).AsSelf();
 
             // Creates our bus from the factory and registers it as a singleton against two interfaces

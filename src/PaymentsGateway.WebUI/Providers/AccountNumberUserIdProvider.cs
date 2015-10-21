@@ -10,7 +10,7 @@ namespace PaymentsGateway.WebUI.Providers
     {
         public string GetUserId(IRequest request)
         {
-            return request.Headers["AccountNumber"];
+            return request.QueryString["AccountNumber"];
         }
     }
 }

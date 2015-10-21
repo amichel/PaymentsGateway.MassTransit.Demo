@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
+using PaymentsGateway.Contracts;
 
 namespace PaymentsGateway.Gateway
 {
     public interface IDepositValidator
     {
-        void Validate();
-        Task ValidateAsync();
+        DepositValidationResponse Validate();
+        Task<DepositValidationResponse> ValidateAsync();
     }
 }

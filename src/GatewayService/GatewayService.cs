@@ -37,7 +37,7 @@ namespace GatewayService
                     h.Username(ConfigurationManager.AppSettings["RabbitMQUser"]);
                     h.Password(ConfigurationManager.AppSettings["RabbitMQPassword"]);
                 });
-                
+
                 x.ReceiveEndpoint(host, "gateway", e =>
                 {
                     e.PrefetchCount = (ushort)Environment.ProcessorCount;
@@ -53,7 +53,7 @@ namespace GatewayService
             _machine = new GatewaySagaBuilder().WithDefaultImplementation()
                                                             .WithClearingRequestSettings(ServiceRequestSettings.ClearingRequestSettings())
                                                             .Build();
-            
+
             _repository = new Lazy<ISagaRepository<GatewaySagaState>>(() => new InMemorySagaRepository<GatewaySagaState>());
         }
 
@@ -62,7 +62,7 @@ namespace GatewayService
             ConfigureSaga();
             ConfigureServiceBus();
 
-            Task.Run(() => _busControl.Publish(new CcDepositRequest()));
+            _busControl.Publish(new CcDepositRequest() { AccountNumber = 111, Amount = 500, CardId = 2, Currency = "EUR" });
 
             return true;
         }

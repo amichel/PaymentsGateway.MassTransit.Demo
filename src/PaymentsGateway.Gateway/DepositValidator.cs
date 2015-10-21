@@ -8,35 +8,31 @@ namespace PaymentsGateway.Gateway
 {
     public class DepositValidator : IDepositValidator
     {
-        private readonly Action<DepositValidationResponse> _onValidated;
         private readonly CcDepositRequest _request;
 
-        public DepositValidator(CcDepositRequest request, [NotNull] Action<DepositValidationResponse> onValidated)
+        public DepositValidator(CcDepositRequest request)
         {
             _request = request;
-            if (onValidated == null)
-                throw new ArgumentNullException(nameof(onValidated), "Valid callback must be supplied for onValidated");
-            _onValidated = onValidated;
         }
 
 
-        public void Validate()
+        public DepositValidationResponse Validate()
         {
             var validationResults = new List<ValidationResult>();
             if (_request.Amount < 0.01)
                 validationResults.Add(ValidationResult.InValidAmountRange);
 
-            _onValidated(new DepositValidationResponse
+            return new DepositValidationResponse
             {
                 IsValid = validationResults.Count == 0,
                 Request = _request,
                 ValidationResults = validationResults
-            });
+            };
         }
 
-        public Task ValidateAsync()
+        public Task<DepositValidationResponse> ValidateAsync()
         {
-            return Task.Run(new Action(Validate));
+            return Task.Run(() => Validate());
         }
     }
 }

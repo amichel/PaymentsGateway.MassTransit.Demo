@@ -10,15 +10,14 @@ namespace PaymentsGateway.Gateway
 {
     public interface IDepositValidatorFactory
     {
-        IDepositValidator CreateCcDepositValidator(CcDepositRequest request,
-            [NotNull] Action<DepositValidationResponse> onValidated);
+        IDepositValidator CreateCcDepositValidator(CcDepositRequest request);
     }
 
     public class DepositValidatorFactory : IDepositValidatorFactory
     {
-        public IDepositValidator CreateCcDepositValidator(CcDepositRequest request, Action<DepositValidationResponse> onValidated)
+        public IDepositValidator CreateCcDepositValidator(CcDepositRequest request)
         {
-            return new DepositValidator(request, onValidated);
+            return new DepositValidator(request);
         }
     }
 }

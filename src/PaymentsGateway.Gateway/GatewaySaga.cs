@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Automatonymous;
+using Automatonymous.Binders;
 using MassTransit;
 using PaymentsGateway.Contracts;
 
@@ -26,17 +28,16 @@ namespace PaymentsGateway.Gateway
 
             Request(() => ClearingFlow, state => state.TransactionId, clearingRequestSettings);
 
+
             Initially(When(DepositRequested)
                 .Then(context =>
                 {
                     context.Instance.TransactionId = context.Instance.CorrelationId;
                     context.Instance.DepositRequest = context.Data.Copy();
                 })
-                .Respond(context => _responseFactory.FromPendingRequest(context.Instance.TransactionId.GetValueOrDefault(), context.Instance.DepositRequest))
-                .TransitionTo(Validating)
-                .ThenAsync(context => _depositValidatorFactory.CreateCcDepositValidator(context.Data,
-                    response => { this.CreateEventLift(DepositValidated).Raise(context.Instance, response); })
-                    .ValidateAsync()));
+                //.TransitionTo(Validating)
+                //.Respond(context => _responseFactory.FromPendingRequest(context.Instance.TransactionId.GetValueOrDefault(), context.Instance.DepositRequest))
+                .Then(context => ValidateRequest(context.Instance, context.Data))); //TODO: make async
 
             During(Validating,
                 When(DepositValidated, filter => filter.Data.IsValid)
@@ -44,40 +45,50 @@ namespace PaymentsGateway.Gateway
                     .Request(ClearingFlow,
                         context => _clearingRequestFactory.FromDepositRequest(context.Instance.TransactionId.GetValueOrDefault(), context.Data.Request)),
                 When(DepositValidated, filter => !filter.Data.IsValid)
-                    .Then(context => this.RaiseEvent(context.Instance, Completed,
-                            _responseFactory.FromFailedValidationResponse(context.Instance.TransactionId.GetValueOrDefault(), context.Data))));
+                    .Then(context => { context.Instance.Response = _responseFactory.FromFailedValidationResponse(context.Instance.TransactionId.GetValueOrDefault(), context.Data); })
+                    .Finalize());
+            //.Then(context => this.RaiseEvent(context.Instance, Completed,
+            //        _responseFactory.FromFailedValidationResponse(context.Instance.TransactionId.GetValueOrDefault(), context.Data))));
 
             During(ClearingFlow.Pending,
                 When(ClearingFlow.Completed, filter => filter.Data.ClearingStatus == ClearingStatus.Authorized)
-                    .TransitionTo(Funding)
                     .Then(context => new CustomerBalance().Credit(context.Instance.DepositRequest, context.Data,
-                        response => { this.CreateEventLift(Completed).Raise(context.Instance, response); })),
+                        response => context.Instance.Response = response)).Finalize(),
                 When(ClearingFlow.Completed, filter => filter.Data.ClearingStatus == ClearingStatus.Rejected)
-                    .Then(context => this.RaiseEvent(context.Instance, Completed,
-                       _responseFactory.FromClearingResponse(context.Instance.DepositRequest,
-                            context.Data))),
+                    .Then(context => context.Instance.Response = _responseFactory.FromClearingResponse(context.Instance.DepositRequest, context.Data))
+                    .Finalize(),
                 When(ClearingFlow.Faulted)
-                    .Then(context => _responseFactory.FromClearingFault(context.Data)),
+                    .Then(context => context.Instance.Response = _responseFactory.FromClearingFault(context.Data)).Finalize(),
                 When(ClearingFlow.TimeoutExpired)
-                    .Then(context => _responseFactory.FromClearingTimeout(context.Instance.TransactionId.GetValueOrDefault(),
-                            context.Instance.DepositRequest, context.Data)));
+                    .Then(context => context.Instance.Response = _responseFactory.FromClearingTimeout(context.Instance.TransactionId.GetValueOrDefault(),
+                            context.Instance.DepositRequest, context.Data)).Finalize());
 
-            DuringAny(When(Completed)
-                    .Publish(x => x.Data)
-                    .Finalize());
+            //DuringAny(When(Completed)
+            //        .Publish(x => x.Data)
+            //        .Finalize());
+
+            Finally(context => context.Publish(x => x.Instance.Response));
 
             SetCompletedWhenFinalized();
             //TODO: Example of compensation
             //TODO: Finally(); - give example of something done on final transition
         }
 
+        private void ValidateRequest(GatewaySagaState instance, CcDepositRequest request)
+        {
+            var result = _depositValidatorFactory.CreateCcDepositValidator(request).Validate();
+            this.RaiseEvent(instance, DepositValidated, result);
+        }
+
         public State Validating { get; private set; }
-        public State Funding { get; private set; }
+        //public State Funding { get; private set; }
 
         public Request<GatewaySagaState, ClearingRequest, ClearingResponse> ClearingFlow { get; private set; }
 
         public Event<CcDepositRequest> DepositRequested { get; private set; }
         public Event<DepositValidationResponse> DepositValidated { get; private set; }
-        public Event<CcDepositResponse> Completed { get; private set; }
+
+
+        // public Event<CcDepositResponse> Completed { get; private set; }
     }
 }
