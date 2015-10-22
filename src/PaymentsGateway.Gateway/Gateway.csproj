@@ -76,12 +76,9 @@
     <Compile Include="CustomerBalance.cs" />
     <Compile Include="GatewaySaga.cs" />
     <Compile Include="DepositResponseFactory.cs" />
-    <Compile Include="DepositValidator.cs" />
     <Compile Include="GatewaySagaBuilder.cs" />
     <Compile Include="GatewaySagaState.cs" />
     <Compile Include="IClearingRequestFactory.cs" />
-    <Compile Include="IDepositValidator.cs" />
-    <Compile Include="DepositValidatorFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -26,7 +26,8 @@
         $.connection.hub.start().done(function () {
             $('#deposit').click(function () {
                 // Call the deposit method on the hub.
-                alert(hub.server.ccDeposit({ AccountNumber: accountNumber, CardId: 100, Amount: 250, Currency: "EUR" }));
+                var result = hub.server.ccDeposit({ AccountNumber: accountNumber, CardId: 100, Amount: 250, Currency: "EUR" });
+                alert(result);
             });
         });
 

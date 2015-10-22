@@ -40,6 +40,7 @@ namespace GatewayService
 
                 x.ReceiveEndpoint(host, "gateway", e =>
                 {
+                    e.Durable = true;
                     e.PrefetchCount = (ushort)Environment.ProcessorCount;
                     e.StateMachineSaga(_machine, _repository.Value);
                 });
@@ -62,7 +63,7 @@ namespace GatewayService
             ConfigureSaga();
             ConfigureServiceBus();
 
-            _busControl.Publish(new CcDepositRequest() { AccountNumber = 111, Amount = 500, CardId = 2, Currency = "EUR" });
+            //_busControl.Publish(new CcDepositRequest() { AccountNumber = 111, Amount = 500, CardId = 2, Currency = "EUR" });
 
             return true;
         }

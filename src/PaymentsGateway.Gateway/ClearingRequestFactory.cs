@@ -17,5 +17,15 @@ namespace PaymentsGateway.Gateway
                 Currency = request.Currency
             };
         }
+
+        public SettlementRequest FromAuthorizationResponse(AuthorizationResponse response)
+        {
+            return new SettlementRequest()
+            {
+                AccountNumber = response.AccountNumber,
+                TransactionId = response.TransactionId,
+                ProviderTransactionId = response.ProviderTransactionId
+            };
+        }
     }
 }

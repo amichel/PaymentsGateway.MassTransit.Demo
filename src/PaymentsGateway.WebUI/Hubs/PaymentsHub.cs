@@ -24,7 +24,7 @@ namespace PaymentsGateway.WebUI.Hubs
         {
             try
             {
-                var client = _bus.CreateRequestClient<CcDepositRequest, CcDepositResponse>(new Uri(ConfigurationManager.AppSettings["GatewayServiceAddress"]), new TimeSpan(0, 0, 0, 5));
+                var client = _bus.CreateRequestClient<CcDepositRequest, CcDepositResponse>(new Uri(ConfigurationManager.AppSettings["GatewayServiceAddress"]), new TimeSpan(0, 0, 0, 30));
                 return await client.Request(request);
             }
             catch (RequestTimeoutException)
