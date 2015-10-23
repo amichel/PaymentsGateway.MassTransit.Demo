@@ -21,6 +21,7 @@ bld/
 
 # Roslyn cache directories
 *.ide/
+.vs/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -229,3 +230,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+src/PaymentsGateway.Gateway/.vs/config/applicationhost.config
+src/PaymentsGateway.Gateway/.vs/config/applicationhost.config
