@@ -210,6 +210,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="package.json" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\components\payments\creditCardDeposit.js" />
     <Content Include="Scripts\hubs.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
@@ -227,6 +228,7 @@
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="server.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -239,6 +241,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Payments\CreditCardDeposit.cshtml" />
+    <Content Include="webpack.config.prod.js" />
+    <Content Include="webpack.config.dev.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
