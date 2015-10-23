@@ -25,7 +25,7 @@ namespace ClearingService
                     h.Username(ConfigurationManager.AppSettings["RabbitMQUser"]);
                     h.Password(ConfigurationManager.AppSettings["RabbitMQPassword"]);
                 });
-
+                 
                 x.ReceiveEndpoint(host, "clearing", e =>
                 {
                     e.Durable = true;
