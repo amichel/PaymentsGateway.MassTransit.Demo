@@ -6,7 +6,7 @@ var srcPath = path.resolve(__dirname, 'scripts/components');
 var appPath = path.resolve(__dirname, 'scripts/components');
 
 var buildPath = path.resolve(__dirname, 'public', 'build');
-var mainPath = path.resolve(appPath, 'components/payments/creditCardDeposit.js');
+var mainPath = path.resolve(appPath, 'payments/creditCardDeposit.js');
 
 module.exports = {
     target: 'web',
