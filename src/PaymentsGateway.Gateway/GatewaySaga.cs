@@ -24,8 +24,8 @@ namespace PaymentsGateway.Gateway
             Event(() => DepositRequested, x => x.CorrelateBy(request => request.DepositRequest.CorellationKey, context => context.Message.CorellationKey)
                                               .SelectId(context => NewId.NextGuid()));
 
-            Request(() => AuthorizationFlow, state => state.TransactionId, clearingRequestSettings);
-            Request(() => SettlementFlow, state => state.TransactionId, clearingRequestSettings);
+            Request(() => AuthorizationFlow, state => state.ClearingRequestId, clearingRequestSettings);
+            Request(() => SettlementFlow, state => state.ClearingRequestId, clearingRequestSettings);
 
 
             Initially(When(DepositRequested)
@@ -37,7 +37,7 @@ namespace PaymentsGateway.Gateway
                 .Respond(context => _responseFactory.FromPendingRequest(context.Instance.TransactionId.GetValueOrDefault(), context.Instance.DepositRequest))
                 .TransitionTo(AuthorizationFlow.Pending)
                 .Request(AuthorizationFlow,
-                    context => _clearingRequestFactory.FromDepositRequest(NewId.NextGuid(), context.Data)));
+                    context => _clearingRequestFactory.FromDepositRequest(context.Instance.TransactionId.GetValueOrDefault(), context.Data)));
 
             During(AuthorizationFlow.Pending,
                 When(AuthorizationFlow.Completed, filter => filter.Data.ClearingStatus == ClearingStatus.Authorized)

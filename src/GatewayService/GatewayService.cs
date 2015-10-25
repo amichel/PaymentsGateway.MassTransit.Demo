@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Automatonymous;
 using MassTransit;
 using MassTransit.QuartzIntegration;
@@ -54,7 +53,11 @@ namespace GatewayService
             _machine = new GatewaySagaBuilder().WithDefaultImplementation()
                                                             .WithClearingRequestSettings(ServiceRequestSettings.ClearingRequestSettings())
                                                             .Build();
-
+#if DEBUG
+            var observer = new StateMachineObserver();
+            _machine.ConnectEventObserver(observer);
+            _machine.ConnectStateObserver(observer);
+#endif
             _repository = new Lazy<ISagaRepository<GatewaySagaState>>(() => new InMemorySagaRepository<GatewaySagaState>());
         }
 

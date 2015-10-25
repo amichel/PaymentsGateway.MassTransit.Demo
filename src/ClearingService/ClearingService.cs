@@ -40,7 +40,11 @@ namespace ClearingService
         private void ConfigureSaga()
         {
             _machine = new ClearingSaga(new ClearingApiAdaptor());
-
+#if DEBUG
+            var observer = new StateMachineObserver();
+            _machine.ConnectEventObserver(observer);
+            _machine.ConnectStateObserver(observer);
+#endif
             _repository = new Lazy<ISagaRepository<ClearingSagaState>>(() => new InMemorySagaRepository<ClearingSagaState>());
         }
         public void Start()
