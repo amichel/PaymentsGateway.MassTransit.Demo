@@ -1,5 +1,6 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="bootstrap.js" />
+/// <reference path="components/creditcarddeposit.index.js" />
 /// <reference path="components/payments/creditcarddeposit.js" />
 /// <reference path="hubs.js" />
 /// <reference path="jquery.signalr-2.2.0.min.js" />
