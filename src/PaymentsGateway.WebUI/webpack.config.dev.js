@@ -9,49 +9,49 @@ var buildPath = path.resolve(__dirname, 'public', 'build');
 var mainPath = path.resolve(appPath, 'creditCardDeposit.index.js');
 
 module.exports = {
-    target: 'web',
-    context: __dirname,
-    devtool: 'eval-cheap-module-source-map',
-    output: {
-        path: buildPath,
-        filename: 'bundle.js',
-        publicPath: 'http://localhost:8080/build/'
-    },
+	target: 'web',
+	context: __dirname,
+	devtool: 'eval-cheap-module-source-map',
+	output: {
+		path: buildPath,
+		filename: 'bundle.js',
+		publicPath: 'http://localhost:8080/build/'
+	},
 
-    debug: true,
-    entry: [
-         'webpack-hot-middleware/client',
+	debug: true,
+	entry: [
+        'webpack-dev-server/client?http://localhost:8080',
+		'webpack/hot/only-dev-server',
         mainPath
-    ],
-    resolve: {
-        root: srcPath,
-        extensions: ['', '.js'],
-        alias: {
-            'styles': 'styles/',
-            'components': 'components/',
-            'stores': 'stores/',
-            'actions': 'actions/'
-        },
-        modulesDirectories: ['node_modules', 'src']
-    },
-    module: {
-       
-        loaders: [{
-            test: /\.(js)$/,
-            exclude: /node_modules/,
-            loader: 'babel'
-        },  {
-            test: /\.css$/,
-            loader: 'style!css'
-        }]
-    },
+	],
+	resolve: {
+		root: srcPath,
+		extensions: ['', '.js'],
+		alias: {
+			'styles': 'styles/',
+			'components': 'components/',
+			'stores': 'stores/',
+			'actions': 'actions/'
+		},
+		modulesDirectories: ['node_modules', 'src']
+	},
+	module: {
 
-    plugins: [
-        new webpack.ProvidePlugin({
-            'fetch': 'exports?global.fetch!whatwg-fetch'
-        }),
+		loaders: [
+	        {
+	        	test: /\.(js)$/,
+	        	exclude: /node_modules/,
+	        	loaders: ['react-hot', 'babel']
+	        }, {
+	        	test: /\.css$/,
+	        	loader: 'style!css'
+	        }]
+	},
+
+	plugins: [
+       
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin()
-    ]
+	]
 
 };
