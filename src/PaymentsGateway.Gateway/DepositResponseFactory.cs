@@ -49,11 +49,11 @@ namespace PaymentsGateway.Gateway
             {
                 AccountNumber = request.AccountNumber,
                 Status =
-                    source.ClearingStatus == ClearingStatus.Authorized ? DepositStatus.Success : DepositStatus.Rejected,
+                    source.ClearingStatus == ClearingStatus.Rejected ? DepositStatus.Rejected : DepositStatus.Success,
                 ErrorMessage =
-                    source.ClearingStatus == ClearingStatus.Authorized
-                        ? ""
-                        : $"Clearing Api rejected transaction. ErrorCode={source.ErrorCode} ResponseCode={source.ResponseCode}",
+                    source.ClearingStatus == ClearingStatus.Rejected
+                        ? $"Clearing Api rejected transaction. ErrorCode={source.ErrorCode} ResponseCode={source.ResponseCode}"
+                        : "",
                 TransactionId = source.TransactionId
             };
         }

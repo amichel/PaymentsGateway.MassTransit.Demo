@@ -6,7 +6,7 @@ namespace PaymentsGateway.Clearing
 {
     public interface IClearingApi
     {
-        Task<AuthorizationResponse> ProcessRequest(AuthorizationRequest request);
-        Task<SettlementResponse> ProcessRequest(SettlementRequest request);
+        AuthorizationResponse ProcessRequest(AuthorizationRequest request);
+        SettlementResponse ProcessRequest(SettlementRequest request);
     }
 }

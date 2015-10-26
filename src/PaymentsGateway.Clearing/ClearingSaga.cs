@@ -21,12 +21,12 @@ namespace PaymentsGateway.Clearing
 
             Initially(When(Authorization)
                 .TransitionTo(Authorizing)
-                .Respond(async context => await _clearingApi.ProcessRequest(context.Data)));
+                .Respond(context => _clearingApi.ProcessRequest(context.Data)));
 
             During(Authorizing,
                 When(Settlement)
                 .TransitionTo(Settling)
-                .Respond(async context => await _clearingApi.ProcessRequest(context.Data))
+                .Respond(context => _clearingApi.ProcessRequest(context.Data))
                 .Finalize());
 
             SetCompletedWhenFinalized();

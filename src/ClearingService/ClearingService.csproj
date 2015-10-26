@@ -117,6 +117,10 @@
       <Project>{152f91ab-e189-4730-a199-2ff3f7fe20f1}</Project>
       <Name>Clearing</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PaymentsGateway.Contracts\Contracts.csproj">
+      <Project>{2C6EC9F2-63B8-4D61-A190-6BBB0634CF63}</Project>
+      <Name>Contracts</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

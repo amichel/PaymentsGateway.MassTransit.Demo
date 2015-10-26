@@ -14,7 +14,7 @@ namespace PaymentsGateway.Gateway
         private readonly IClearingRequestFactory _clearingRequestFactory;
 
         //TODO: resolve components with IOC
-        public GatewaySaga(IDepositResponseFactory responseFactory, IClearingRequestFactory clearingRequestFactory, RequestSettings clearingRequestSettings)
+        public GatewaySaga(IDepositResponseFactory responseFactory, IClearingRequestFactory clearingRequestFactory, IAccountingLogicFacade accountingLogic, RequestSettings clearingRequestSettings)
         {
             _responseFactory = responseFactory;
             _clearingRequestFactory = clearingRequestFactory;
@@ -41,7 +41,7 @@ namespace PaymentsGateway.Gateway
 
             During(AuthorizationFlow.Pending,
                 When(AuthorizationFlow.Completed, filter => filter.Data.ClearingStatus == ClearingStatus.Authorized)
-                    .Then(context => new CustomerBalance().Credit(context.Instance.DepositRequest, context.Data,
+                    .Then(context => accountingLogic.Credit(context.Instance.DepositRequest, context.Data,
                         response => context.Instance.Response = response))
                         .TransitionTo(SettlementFlow.Pending)
                         .Request(SettlementFlow, context => _clearingRequestFactory.FromAuthorizationResponse(context.Data)),

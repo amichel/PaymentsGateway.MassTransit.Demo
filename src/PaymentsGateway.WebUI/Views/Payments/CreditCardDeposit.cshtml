@@ -12,10 +12,10 @@
 <script src="~/Scripts/hubs.js"></script>
 <script type="text/javascript">
     $(function () {
-        var accountNumber = 123;
+        var accountNumber = 122;
         // Declare a proxy to reference the hub.
         var hub = $.connection.paymentsHub;
-        hub.qs = "AccountNumber" + accountNumber;
+        $.connection.hub.qs = { AccountNumber: accountNumber };
 
         // Create a callback function that the hub can call to send response from bus consumer
         hub.client.onDepositResponse = function (response) {

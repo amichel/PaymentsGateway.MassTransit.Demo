@@ -4,12 +4,8 @@ using PaymentsGateway.Contracts;
 
 namespace PaymentsGateway.Gateway
 {
-    public class CustomerBalance
+    public class CustomerBalance : ICustomerBalance
     {
-        public CustomerBalance()
-        {
-        }
-
         public void Credit(CcDepositRequest depositRequest, AuthorizationResponse response,
             Action<CcDepositResponse> onFunded)
         {
