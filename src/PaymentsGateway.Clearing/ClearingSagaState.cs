@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Automatonymous;
-using PaymentsGateway.Contracts;
 
 namespace PaymentsGateway.Clearing
 {
@@ -16,10 +15,8 @@ namespace PaymentsGateway.Clearing
         }
 
         public Guid? TransactionId { get; set; }
-        public int AccountNumber { get; set; }
-        public string ProviderTransactionId { get; set; }
         public State CurrentState { get; set; }
         public Guid CorrelationId { get; set; }
     }
-    
+
 }
