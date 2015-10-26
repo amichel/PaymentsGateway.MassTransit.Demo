@@ -1,4 +1,5 @@
 ﻿import React from 'react';
+import {Button, Input} from 'react-bootstrap';
 
 export default React.createClass({
 	render:function() {
@@ -11,22 +12,22 @@ export default React.createClass({
 				<div className="col-md-9">
 				  <div className="row">
 					<div className="col-md-9 form-group">
-						<input type="text" className="form-control" placeholder="Credit Card Number"/>
+						<Input type="text" className="form-control" placeholder="Credit Card Number"/>
 					</div>
 					<div className="col-md-3 form-group">
-						<input type="text" className="form-control" placeholder="CVV"/>
+						<Input type="text" className="form-control" placeholder="CVV"/>
 					</div>
 					<div className="col-md-9 form-group">
-					  <input type="text" className="form-control" placeholder="Name On The Card"/>
+					  <Input type="text" className="form-control" placeholder="Name On The Card"/>
 					</div>
 					<div className="col-md-3 form-group">
-					  <input type="email" className="form-control" placeholder="Expiration Date"/>
+					  <Input type="email" className="form-control" placeholder="Expiration Date"/>
 					</div>
 				  </div>
 				 
 				  <div className="row">
 					<div className="col-md-12 form-group">
-					  <button className="btn btn-default pull-right" type="submit">Pay</button>
+					  <Button bsStyle="danger" className="pull-right" type="submit">Pay</Button>
 					</div>
 				  </div> 
 				</div>
