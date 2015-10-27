@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import {Button, Input} from 'react-bootstrap';
+import {startPaymentProcessing} from '../../creditCardActions';
 
 export default React.createClass({
 	startPayment:function() {
@@ -9,7 +10,7 @@ export default React.createClass({
 			cardHolderName:this.refs.cardHolderName,
 			expirationDate:this.refs.expirationDate
 		}
-
+		this.props.store.dispatch(startPaymentProcessing(paymentData));
 	},
 	render:function() {
 		return (

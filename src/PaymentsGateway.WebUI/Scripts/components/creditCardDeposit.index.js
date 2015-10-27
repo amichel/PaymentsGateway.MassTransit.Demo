@@ -19,4 +19,4 @@ const store = createStoreWithMiddleware(rootReducer);
 
 store.dispatch(startPaymentsHub());
 
-ReactDOM.render(<CCDeposit />, document.getElementById('reactRoot'));
+ReactDOM.render(<CCDeposit store={store}/>, document.getElementById('reactRoot'));
