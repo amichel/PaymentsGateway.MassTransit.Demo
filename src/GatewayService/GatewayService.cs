@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Automatonymous;
 using MassTransit;
 using MassTransit.QuartzIntegration;
@@ -40,6 +39,7 @@ namespace GatewayService
 
                 x.ReceiveEndpoint(host, "gateway", e =>
                 {
+                    e.Durable = true;
                     e.PrefetchCount = (ushort)Environment.ProcessorCount;
                     e.StateMachineSaga(_machine, _repository.Value);
                 });
@@ -53,7 +53,11 @@ namespace GatewayService
             _machine = new GatewaySagaBuilder().WithDefaultImplementation()
                                                             .WithClearingRequestSettings(ServiceRequestSettings.ClearingRequestSettings())
                                                             .Build();
-
+#if DEBUG
+            var observer = new StateMachineObserver();
+            _machine.ConnectEventObserver(observer);
+            _machine.ConnectStateObserver(observer);
+#endif
             _repository = new Lazy<ISagaRepository<GatewaySagaState>>(() => new InMemorySagaRepository<GatewaySagaState>());
         }
 
@@ -62,7 +66,7 @@ namespace GatewayService
             ConfigureSaga();
             ConfigureServiceBus();
 
-            _busControl.Publish(new CcDepositRequest() { AccountNumber = 111, Amount = 500, CardId = 2, Currency = "EUR" });
+            //_busControl.Publish(new CcDepositRequest() { AccountNumber = 111, Amount = 500, CardId = 2, Currency = "EUR" });
 
             return true;
         }

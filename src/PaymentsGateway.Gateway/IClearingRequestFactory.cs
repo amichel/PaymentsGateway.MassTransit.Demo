@@ -6,5 +6,6 @@ namespace PaymentsGateway.Gateway
     public interface IClearingRequestFactory
     {
         AuthorizationRequest FromDepositRequest(Guid transactionId, CcDepositRequest request);
+        SettlementRequest FromAuthorizationResponse(AuthorizationResponse response);
     }
 }

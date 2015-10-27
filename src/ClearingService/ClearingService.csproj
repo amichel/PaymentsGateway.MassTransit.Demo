@@ -56,6 +56,10 @@
       <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.3.0.14\lib\net45\MassTransit.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MassTransit.AutomatonymousIntegration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
+      <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.Automatonymous.3.0.14\lib\net45\MassTransit.AutomatonymousIntegration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MassTransit.RabbitMqTransport, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
       <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.RabbitMQ.3.0.14\lib\net45\MassTransit.RabbitMqTransport.dll</HintPath>
       <Private>True</Private>
@@ -90,6 +94,7 @@
     <Compile Include="ClearingService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StateMachineObserver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -111,6 +116,10 @@
     <ProjectReference Include="..\PaymentsGateway.Clearing\Clearing.csproj">
       <Project>{152f91ab-e189-4730-a199-2ff3f7fe20f1}</Project>
       <Name>Clearing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PaymentsGateway.Contracts\Contracts.csproj">
+      <Project>{2C6EC9F2-63B8-4D61-A190-6BBB0634CF63}</Project>
+      <Name>Contracts</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

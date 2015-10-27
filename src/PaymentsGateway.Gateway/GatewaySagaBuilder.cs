@@ -14,7 +14,7 @@ namespace PaymentsGateway.Gateway
     {
         private IDepositResponseFactory _responseFactory;
         private IClearingRequestFactory _clearingRequestFactory;
-        private IDepositValidatorFactory _depositValidatorFactory;
+        private IAccountingLogicFacade _accountingLogic;
         private RequestSettings _clearingRequestSettings;
 
         public GatewaySagaBuilder WithResponseFactory<T>() where T : IDepositResponseFactory, new()
@@ -27,9 +27,9 @@ namespace PaymentsGateway.Gateway
             _clearingRequestFactory = new T();
             return this;
         }
-        public GatewaySagaBuilder WithDepositValidatorFactory<T>() where T : IDepositValidatorFactory, new()
+        public GatewaySagaBuilder WithAccountingLogic<T>() where T : IAccountingLogicFacade, new()
         {
-            _depositValidatorFactory = new T();
+            _accountingLogic = new T();
             return this;
         }
 
@@ -43,13 +43,13 @@ namespace PaymentsGateway.Gateway
         {
             _responseFactory = new DepositResponseFactory();
             _clearingRequestFactory = new ClearingRequestFactory();
-            _depositValidatorFactory = new DepositValidatorFactory();
+            _accountingLogic = new AccountingLogicFacade();
             return this;
         }
 
         public GatewaySaga Build()
         {
-            return new GatewaySaga(_responseFactory, _clearingRequestFactory, _depositValidatorFactory, _clearingRequestSettings);
+            return new GatewaySaga(_responseFactory, _clearingRequestFactory, _accountingLogic, _clearingRequestSettings);
         }
     }
 }

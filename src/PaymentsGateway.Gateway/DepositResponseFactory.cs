@@ -10,8 +10,8 @@ namespace PaymentsGateway.Gateway
     {
         CcDepositResponse FromPendingRequest(Guid transactionId, CcDepositRequest request);
         CcDepositResponse FromFailedValidationResponse(Guid transactionId, DepositValidationResponse source);
-        CcDepositResponse FromClearingResponse(CcDepositRequest request, AuthorizationResponse source);
-        CcDepositResponse FromClearingFault(Fault<AuthorizationRequest> source);
+        CcDepositResponse FromClearingResponse(CcDepositRequest request, ClearingResponse source);
+        CcDepositResponse FromClearingFault(Fault<ClearingRequest> source);
 
         CcDepositResponse FromClearingTimeout(Guid transactionId, CcDepositRequest request,
             RequestTimeoutExpired source);
@@ -43,22 +43,22 @@ namespace PaymentsGateway.Gateway
             };
         }
 
-        public CcDepositResponse FromClearingResponse(CcDepositRequest request, AuthorizationResponse source)
+        public CcDepositResponse FromClearingResponse(CcDepositRequest request, ClearingResponse source)
         {
             return new CcDepositResponse
             {
                 AccountNumber = request.AccountNumber,
                 Status =
-                    source.ClearingStatus == ClearingStatus.Authorized ? DepositStatus.Success : DepositStatus.Rejected,
+                    source.ClearingStatus == ClearingStatus.Rejected ? DepositStatus.Rejected : DepositStatus.Success,
                 ErrorMessage =
-                    source.ClearingStatus == ClearingStatus.Authorized
-                        ? ""
-                        : $"Clearing Api rejected transaction. ErrorCode={source.ErrorCode} ResponseCode={source.ResponseCode}",
+                    source.ClearingStatus == ClearingStatus.Rejected
+                        ? $"Clearing Api rejected transaction. ErrorCode={source.ErrorCode} ResponseCode={source.ResponseCode}"
+                        : "",
                 TransactionId = source.TransactionId
             };
         }
 
-        public CcDepositResponse FromClearingFault(Fault<AuthorizationRequest> source)
+        public CcDepositResponse FromClearingFault(Fault<ClearingRequest> source)
         {
             return new CcDepositResponse
             {

@@ -20,14 +20,23 @@ namespace PaymentsGateway.Clearing
             InstanceState(x => x.CurrentState);
 
             Initially(When(Authorization)
-                .TransitionTo(Authorizing)
-                .Respond(async context => await _clearingApi.ProcessRequest(context.Data)));
+                            .TransitionTo(Authorizing)
+                            .Then(context => context.GetOrAddPayload(() => _clearingApi.ProcessRequest(context.Data)))
+                            .Respond(context => context.GetPayload<AuthorizationResponse>())
+                            .Then(context =>
+                            {
+                                AuthorizationResponse response;
+                                if (context.TryGetPayload(out response) && response.ClearingStatus == ClearingStatus.Rejected)
+                                    this.RaiseEvent(context.Instance, Rejected);
+                            }));
 
             During(Authorizing,
+                When(Rejected)
+                    .Finalize(),
                 When(Settlement)
-                .TransitionTo(Settling)
-                .Respond(async context => await _clearingApi.ProcessRequest(context.Data))
-                .Finalize());
+                    .TransitionTo(Settling)
+                    .Respond(context => _clearingApi.ProcessRequest(context.Data))
+                    .Finalize());
 
             SetCompletedWhenFinalized();
         }
@@ -37,5 +46,6 @@ namespace PaymentsGateway.Clearing
 
         public Event<AuthorizationRequest> Authorization { get; private set; }
         public Event<SettlementRequest> Settlement { get; private set; }
+        public Event Rejected { get; private set; }
     }
 }

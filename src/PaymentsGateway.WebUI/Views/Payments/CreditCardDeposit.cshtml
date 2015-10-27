@@ -15,7 +15,7 @@
         var accountNumber = 123;
         // Declare a proxy to reference the hub.
         var hub = $.connection.paymentsHub;
-        hub.qs = "AccountNumber" + accountNumber;
+        $.connection.hub.qs = { AccountNumber: accountNumber };
 
         // Create a callback function that the hub can call to send response from bus consumer
         hub.client.onDepositResponse = function (response) {
@@ -26,7 +26,8 @@
         $.connection.hub.start().done(function () {
             $('#deposit').click(function () {
                 // Call the deposit method on the hub.
-                alert(hub.server.ccDeposit({ AccountNumber: accountNumber, CardId: 100, Amount: 250, Currency: "EUR" }));
+                var result = hub.server.ccDeposit({ AccountNumber: accountNumber, CardId: 100, Amount: 250, Currency: "EUR" });
+                alert(result);
             });
         });
 
