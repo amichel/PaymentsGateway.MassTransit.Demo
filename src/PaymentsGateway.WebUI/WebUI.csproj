@@ -17,7 +17,7 @@
     <AssemblyName>PaymentsGateway.WebUI</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -207,28 +207,33 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Index.html" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\constants.js" />
+    <Content Include="Scripts\creditCardActions.js" />
+    <Content Include="Scripts\libs\bootstrap.js" />
+    <Content Include="Scripts\libs\bootstrap.min.js" />
     <Content Include="package.json" />
-    <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <None Include="Scripts\libs\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\components\creditCardDeposit.index.js" />
     <Content Include="Scripts\components\payments\creditCardDeposit.js" />
-    <Content Include="Scripts\hubs.js" />
-    <Content Include="Scripts\jquery-2.1.4.js" />
-    <Content Include="Scripts\jquery-2.1.4.min.js" />
-    <Content Include="Scripts\jquery-2.1.4.min.map" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
-    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
-    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\libs\hubs.js" />
+    <Content Include="Scripts\libs\jquery-2.1.4.js" />
+    <Content Include="Scripts\libs\jquery-2.1.4.min.js" />
+    <Content Include="Scripts\libs\jquery-2.1.4.min.map" />
+    <None Include="Scripts\libs\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\libs\jquery.signalR-2.2.0.js" />
+    <Content Include="Scripts\libs\jquery.signalR-2.2.0.min.js" />
+    <Content Include="Scripts\libs\jquery.validate.js" />
+    <Content Include="Scripts\libs\jquery.validate.min.js" />
+    <Content Include="Scripts\libs\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\libs\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\libs\modernizr-2.6.2.js" />
+    <Content Include="Scripts\libs\respond.js" />
+    <Content Include="Scripts\libs\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\libs\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\libs\respond.min.js" />
+    <Content Include="Scripts\paymentHub.js" />
+    <Content Include="Scripts\reducers.js" />
+    <Content Include="Scripts\paymentStore.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="server.js" />
     <Content Include="Web.config" />
@@ -249,8 +254,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Scripts\actions\" />
-    <Folder Include="Scripts\reducers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -283,7 +286,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>4310</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:4310/</IISUrl>
+          <IISUrl>http://localhost:82/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

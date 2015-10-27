@@ -20,9 +20,9 @@ module.exports = {
 
 	debug: true,
 	entry: [
-        'webpack-dev-server/client?http://localhost:8080',
+		'webpack-dev-server/client?http://localhost:8080',
 		'webpack/hot/only-dev-server',
-        mainPath
+		mainPath
 	],
 	resolve: {
 		root: srcPath,
@@ -36,22 +36,21 @@ module.exports = {
 		modulesDirectories: ['node_modules', 'src']
 	},
 	module: {
-
 		loaders: [
-	        {
-	        	test: /\.(js)$/,
-	        	exclude: /node_modules/,
-	        	loaders: ['react-hot', 'babel']
-	        }, {
-	        	test: /\.css$/,
-	        	loader: 'style!css'
-	        }]
+			{
+				test: /\.(js)$/,
+				exclude: /node_modules/,
+				loaders: ['react-hot', 'babel']
+			}, {
+				test: /\.css$/,
+				loader: 'style!css'
+			}
+		]
 	},
 
 	plugins: [
-       
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+		new webpack.HotModuleReplacementPlugin(),
+		new webpack.NoErrorsPlugin()
 	]
 
 };
