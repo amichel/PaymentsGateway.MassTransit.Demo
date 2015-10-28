@@ -5,10 +5,10 @@ import {startPaymentProcessing} from '../../creditCardActions';
 export default React.createClass({
 	startPayment:function() {
 		const paymentData = {
-			ccNumber: this.refs.ccNumber,
-			cvv:this.refs.cvv,
-			cardHolderName:this.refs.cardHolderName,
-			expirationDate:this.refs.expirationDate
+			ccNumber: this.refs.ccNumber.value,
+			cvv:this.refs.cvv.value,
+			cardHolderName:this.refs.cardHolderName.value,
+			expirationDate:this.refs.expirationDate.value
 		}
 		this.props.store.dispatch(startPaymentProcessing(paymentData));
 	},

@@ -19,7 +19,7 @@ export function startPaymentsHub() {
 
 export function startPaymentProcessing(paymentData) {
 	return function(dispatch) {
-		dispatch(PAYMENT_STATUS.started);
+		dispatch(changePaymentStatus(PAYMENT_STATUS.started));
 
 		return ccDepositServer(paymentData);
 	}
