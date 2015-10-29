@@ -1,18 +1,21 @@
 ﻿import React from 'react';
+import { connect } from 'react-redux';
 import {Button, Input} from 'react-bootstrap';
 import {startPaymentProcessing} from '../../creditCardActions';
 
-export default React.createClass({
-	startPayment:function() {
+const CreditCardDeposit = React.createClass({
+	startPayment: function() {
 		const paymentData = {
 			ccNumber: this.refs.ccNumber.value,
-			cvv:this.refs.cvv.value,
-			cardHolderName:this.refs.cardHolderName.value,
-			expirationDate:this.refs.expirationDate.value
+			cvv: this.refs.cvv.value,
+			cardHolderName: this.refs.cardHolderName.value,
+			expirationDate: this.refs.expirationDate.value
 		}
-		this.props.store.dispatch(startPaymentProcessing(paymentData));
+		this.props.dispatch(startPaymentProcessing(paymentData));
 	},
-	render:function() {
+	render: function() {
+				console.log("rendering for state", this.props.store.getState());
+
 		return (
 			<div>
 				<h1>Have some fun by paying us with your: </h1>
@@ -37,7 +40,7 @@ export default React.createClass({
 				 
 						<div className="row">
 						  <div className="col-md-12 form-group">
-							<Button bsStyle="danger" className="pull-right" onClick={this.startPayment}>Pay</Button>
+							<Button bsStyle={this.props.paymentsHubReady ? "danger" : "default"} className="pull-right" onClick={this.startPayment}>Pay</Button>
 						  </div>
 						</div> 
 					  </div>
@@ -45,4 +48,10 @@ export default React.createClass({
 			  </div>
 		);
 	}
-})
+});
+
+function mapStateToProps(state) {
+	return {paymentStatus: state.paymentStatus, paymentsHubReady:state.paymentsHubReady } ;;
+}
+
+export default connect(mapStateToProps)(CreditCardDeposit);

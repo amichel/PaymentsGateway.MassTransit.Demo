@@ -12,6 +12,7 @@ export function startPaymentsHub() {
 		};
 
 		return startHub().done(() => {
+			console.trace("hub started");
 			dispatch(paymentsHubReady());
 		});
 	}
