@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayService", "..\Gatewa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearingService", "..\ClearingService\ClearingService.csproj", "{DF47CB2B-9906-44E9-8105-97046C8CD7B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GatewayService.Tests", "..\PaymentsGateway.Gateway.Tests\GatewayService.Tests.csproj", "{999A1FCA-2D77-423C-B10C-D7B64D769B9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clearing.Tests", "..\PaymentsGateway.Clearing.Tests\Clearing.Tests.csproj", "{B3F6A409-1EC6-48FA-B9E9-4C0A1C5D9EE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{DF47CB2B-9906-44E9-8105-97046C8CD7B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF47CB2B-9906-44E9-8105-97046C8CD7B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF47CB2B-9906-44E9-8105-97046C8CD7B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{999A1FCA-2D77-423C-B10C-D7B64D769B9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{999A1FCA-2D77-423C-B10C-D7B64D769B9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{999A1FCA-2D77-423C-B10C-D7B64D769B9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{999A1FCA-2D77-423C-B10C-D7B64D769B9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3F6A409-1EC6-48FA-B9E9-4C0A1C5D9EE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3F6A409-1EC6-48FA-B9E9-4C0A1C5D9EE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3F6A409-1EC6-48FA-B9E9-4C0A1C5D9EE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3F6A409-1EC6-48FA-B9E9-4C0A1C5D9EE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
