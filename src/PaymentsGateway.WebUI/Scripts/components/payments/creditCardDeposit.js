@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import { connect } from 'react-redux';
-import {Button, Input} from 'react-bootstrap';
+import {Button, Input, DropdownButton, MenuItem, Glyphicon} from 'react-bootstrap';
 import {startPaymentProcessing} from '../../creditCardActions';
 
 const CreditCardDeposit = React.createClass({
@@ -37,12 +37,25 @@ const CreditCardDeposit = React.createClass({
 							<Input type="email" ref="expirationDate" className="form-control" placeholder="Expiration Date"/>
 						  </div>
 						</div>
-				 
+
 						<div className="row">
+						  <div className="col-md-5 form-group">
+								<Input type="number" ref="amount" className="form-control" placeholder="Amount"/>
+							</div>
+
+						  <div className="col-md-5 form-group">
+						  <DropdownButton ref="currency" className="col-md-5 form-control">
+			  	  				<MenuItem eventKey="1">EUR</MenuItem>
+								<MenuItem eventKey="2">USD</MenuItem>
+			  					<MenuItem eventKey="3" active>GBP</MenuItem>
+			  					<MenuItem eventKey="4">JPY</MenuItem>
+						</DropdownButton>
+						 </div>
+
 						  <div className="col-md-12 form-group">
 							<Button bsStyle={this.props.paymentsHubReady ? "danger" : "default"} className="pull-right" onClick={this.startPayment}>Pay</Button>
 						  </div>
-						</div> 
+						</div>
 					  </div>
 					</div>
 			  </div>
