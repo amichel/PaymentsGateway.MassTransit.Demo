@@ -93,6 +93,10 @@
       <Project>{2C6EC9F2-63B8-4D61-A190-6BBB0634CF63}</Project>
       <Name>Contracts</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PaymentsGateway.Gateway\Gateway.csproj">
+      <Project>{A71B519D-5FAE-434C-8E32-CF8F4519BE9F}</Project>
+      <Name>Gateway</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
