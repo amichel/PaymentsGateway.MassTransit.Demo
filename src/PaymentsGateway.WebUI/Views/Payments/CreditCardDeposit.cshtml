@@ -42,15 +42,27 @@
 
 <script src="~/Scripts/libs/hubs.js"></script>
 <script type="text/javascript">
-    var paymentsDal = (function (connection) {
-        const accountNumber = 123;
+    var PaymentsDal = function (callback) {
+        var connection = $.connection;
         var hub = connection.paymentsHub;
+        connection.hub.disconnected(function() {
+            setTimeout(function() {
+                connection.hub.start();
+            }, 1); // Restart connection after 5 seconds.
+        });
+
+        function switchAccount(accountNumber) {
+            connection.hub.stop();
+            connection.hub.qs = { AccountNumber: accountNumber };
+            connection.hub.start();
+        }
+
         //TODO: no reconnects/etc...
 
-        $.connection.hub.start();
         // Create a callback function that the hub can call to send response from bus consumer
         hub.client.onDepositResponse = function (response) {
-            console.log("response", response);
+            console.trace("push notif response", response);
+            callback(response);
         };
 
         // Start the connection.
@@ -60,17 +72,25 @@
             payWithCreditCard: function (ccInfo) {
                 const result = hub.server.ccDeposit({ AccountNumber: ccInfo.accountNumber, CardId: ccInfo.cardId, Amount: ccInfo.amount, Currency: ccInfo.currency });
                 return result;
-            }
+            },
+            switchAccount: switchAccount
         };
-    })($.connection);
+    };
 
-    var depositVM = (function (ko, $, paymentsDal) {
-        var accountNumber = 123;
+    var depositVM = (function (ko, $) {
+        var paymentsDal = PaymentsDal(handlePaymentResponse);
         const availableCreditCards = [
-            { id: 100, last4: "xxxxxxxxxxxx1234", nameOnCard: "Silviu Eigel", expirationDate: new Date(2015, 11, 11) },
-            { id: 101, last4: "xxxxxxxxxxxx6789", nameOnCard: "Alex Michel", expirationDate: new Date(2016, 10, 10) }
+            { id: 100, accountNumber: 100, last4: "xxxxxxxxxxxx1234", nameOnCard: "Silviu Eigel", expirationDate: new Date(2015, 11, 11) },
+            { id: 101, accountNumber: 101, last4: "xxxxxxxxxxxx6789", nameOnCard: "Alex Michel", expirationDate: new Date(2016, 10, 10) }
         ];
+
         var creditCard = ko.observable(availableCreditCards[0]);
+
+        creditCard.subscribe(function(val) {
+            paymentsDal.switchAccount(val.accountNumber);
+        });
+        
+        paymentsDal.switchAccount(creditCard().accountNumber);
 
         const availableCurrencies = ['USD', 'EUR', 'GBP'];
         var currency = ko.observable(),
@@ -78,17 +98,26 @@
 
         function deposit() {
             paymentsDal.payWithCreditCard({
-                accountNumber: accountNumber,
+                accountNumber: creditCard().accountNumber,
                 cardId: creditCard().id,
                 amount: amount(),
                 currency: currency()
-            }).done(function (res) {
-                console.log("response ", res);
-                if (res.Status !== 0) {
-                    alert(`Your deposit failed because: ${res.ErrorMessage}`);
+            }, handlePaymentResponse).done(handlePaymentResponse);
+        }
+
+        function handlePaymentResponse(res) {
+                console.trace("response ", res);
+                if (res.Status === 0) {
+                console.log('Your deposit is pending! Reference Number:'+ res.TransactionId);
+                } else if (res.Status === 2) {
+                console.log('Your deposit is successful! Reference Number:'+res.TransactionId);
+                alert('Your deposit is successful! Reference Number:'+ res.TransactionId);
+
+                } else {
+                    console.log('Your deposit failed because:' + res.ErrorMessage);
+                    alert('Your deposit failed because:' +res.ErrorMessage);
+                    
                 }
-                alert(`Your deposit was successful! Reference Number: ${res.TransactionId}`);
-            });
         }
 
         return {
@@ -105,7 +134,7 @@
             amount: amount,
             deposit: deposit
         };
-    })(ko, $, paymentsDal);
+    })(ko, $);
 
 
     $(function () {
