@@ -7,30 +7,102 @@
 
 @Scripts.Render("~/Scripts/libs/jquery.signalR-2.2.0.js")
 @Scripts.Render("~/Scripts/libs/bootstrap.min.js")
-
-<button id="deposit">Deposit</button>
+<div id="paymentComponent">
+    <select data-bind="options:availableCreditCards, optionsText:'last4', value:creditCard"></select>
+    <select data-bind="value: currency, options:availableCurrencies"></select>
+    <input type="number" data-bind="value: amount" />
+    <button id="deposit" data-bind="click: deposit">Deposit</button>
+</div>
 
 <script src="~/Scripts/libs/hubs.js"></script>
 <script type="text/javascript">
-    $(function () {
+    var paymentsDal = (function (connection) {
         var accountNumber = 123;
-        // Declare a proxy to reference the hub.
-        var hub = $.connection.paymentsHub;
-        $.connection.hub.qs = { AccountNumber: accountNumber };
+        var hub = connection.paymentsHub;
+        connection.hub.qs = { AccountNumber: accountNumber };
 
         // Create a callback function that the hub can call to send response from bus consumer
         hub.client.onDepositResponse = function (response) {
-            alert(response);
+            console.log("response", response);
         };
 
         // Start the connection.
-        $.connection.hub.start().done(function () {
-            $('#deposit').click(function () {
-                // Call the deposit method on the hub.
-                var result = hub.server.ccDeposit({ AccountNumber: accountNumber, CardId: 100, Amount: 250, Currency: "EUR" });
-                alert(result);
-            });
+        connection.hub.start().done(function () {
+//            $('#deposit').click(function () {
+//                // Call the deposit method on the hub.
+//                var result = hub.server.ccDeposit({ AccountNumber: accountNumber, CardId: 100, Amount: 250, Currency: "EUR" });
+//                alert(result);
+//            });
         });
+
+        return {
+            payWithCreditCard: function (ccInfo) {
+                var result = hub.server.ccDeposit({ AccountNumber: ccInfo.accountNumber, CardId: ccInfo.cardId, Amount: ccInfo.amount, Currency: ccInfo.currency });
+                return result;
+            }
+        }
+    })($.connection);
+
+    var depositVM = (function (ko, $, paymentsDal) {
+        var accountNumber = 123;
+        var availableCreditCards = [
+                { id: 100, last4: "xxxxxxxxxxxx1234" },
+                { id: 101, last4: "xxxxxxxxxxxx6789" }
+        ],
+            creditCard = ko.observable();
+
+        var availableCurrencies = ['USD', 'EUR', 'GBP'],
+            currency = ko.observable(),
+            amount = ko.observable().extend({ required: true, min: 1 });
+
+        function deposit() {
+            paymentsDal.payWithCreditCard({
+                accountNumber: accountNumber,
+                cardId: creditCard().id,
+                amount: amount(),
+                currency: currency()
+            }).done(function(res) {
+                console.log("response ",res);
+                if (res.Status!=0) {
+                    alert("Your deposit failed because: " + res.ErrorMessage);
+                }
+                alert("Your deposit was successful! Reference Number: " + res.TransactionId);
+            });
+
+        }
+        return {
+            availableCreditCards: availableCreditCards,
+            creditCard: creditCard,
+            availableCurrencies: availableCurrencies,
+            currency: currency,
+            amount: amount,
+            deposit: deposit
+        }
+    })(ko, $, paymentsDal);
+
+
+    $(function () {
+        ko.applyBindings(depositVM);
+
+//        var accountNumber = 123;
+//        // Declare a proxy to reference the hub.
+//        var hub = $.connection.paymentsHub;
+//        $.connection.hub.qs = { AccountNumber: accountNumber };
+//
+//        // Create a callback function that the hub can call to send response from bus consumer
+//        hub.client.onDepositResponse = function (response) {
+//            console.log(response)
+////            alert(response);
+//        };
+//
+//        // Start the connection.
+//        $.connection.hub.start().done(function () {
+//            $('#deposit').click(function () {
+//                // Call the deposit method on the hub.
+//                var result = hub.server.ccDeposit({ AccountNumber: accountNumber, CardId: 100, Amount: 250, Currency: "EUR" });
+////                alert(result);
+//            });
+//        });
 
         //TODO: no reconnects/etc...
     });
