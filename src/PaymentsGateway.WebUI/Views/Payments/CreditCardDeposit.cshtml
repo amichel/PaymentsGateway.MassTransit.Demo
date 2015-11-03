@@ -20,22 +20,19 @@
         var accountNumber = 123;
         var hub = connection.paymentsHub;
         connection.hub.qs = { AccountNumber: accountNumber };
-
+        //TODO: no reconnects/etc...
+       
+        $.connection.hub.start();
         // Create a callback function that the hub can call to send response from bus consumer
         hub.client.onDepositResponse = function (response) {
             console.log("response", response);
         };
 
         // Start the connection.
-        connection.hub.start().done(function () {
-//            $('#deposit').click(function () {
-//                // Call the deposit method on the hub.
-//                var result = hub.server.ccDeposit({ AccountNumber: accountNumber, CardId: 100, Amount: 250, Currency: "EUR" });
-//                alert(result);
-//            });
-        });
+        var starting = connection.hub.start();
 
         return {
+            starting:starting,
             payWithCreditCard: function (ccInfo) {
                 var result = hub.server.ccDeposit({ AccountNumber: ccInfo.accountNumber, CardId: ccInfo.cardId, Amount: ccInfo.amount, Currency: ccInfo.currency });
                 return result;
@@ -84,26 +81,5 @@
     $(function () {
         ko.applyBindings(depositVM);
 
-//        var accountNumber = 123;
-//        // Declare a proxy to reference the hub.
-//        var hub = $.connection.paymentsHub;
-//        $.connection.hub.qs = { AccountNumber: accountNumber };
-//
-//        // Create a callback function that the hub can call to send response from bus consumer
-//        hub.client.onDepositResponse = function (response) {
-//            console.log(response)
-////            alert(response);
-//        };
-//
-//        // Start the connection.
-//        $.connection.hub.start().done(function () {
-//            $('#deposit').click(function () {
-//                // Call the deposit method on the hub.
-//                var result = hub.server.ccDeposit({ AccountNumber: accountNumber, CardId: 100, Amount: 250, Currency: "EUR" });
-////                alert(result);
-//            });
-//        });
-
-        //TODO: no reconnects/etc...
     });
 </script>
