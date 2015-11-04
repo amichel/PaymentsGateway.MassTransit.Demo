@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Web;
+using System.Reflection;
 using Autofac;
-using Automatonymous;
 using MassTransit;
-using MassTransit.RabbitMqTransport;
+using Module = Autofac.Module;
 
 namespace PaymentsGateway.WebUI.IOC
 {
     public class ServiceBusModule : Module
     {
-        private readonly System.Reflection.Assembly[] _assembliesToScan;
+        private readonly Assembly[] _assembliesToScan;
 
-        public ServiceBusModule(params System.Reflection.Assembly[] assembliesToScan)
+        public ServiceBusModule(params Assembly[] assembliesToScan)
         {
             _assembliesToScan = assembliesToScan;
         }
@@ -37,10 +34,9 @@ namespace PaymentsGateway.WebUI.IOC
                 {
                     e.AutoDelete = true;
                     e.Exclusive = true;
-                    e.PrefetchCount = (ushort)Environment.ProcessorCount;
+                    e.PrefetchCount = (ushort) Environment.ProcessorCount;
                     e.LoadFrom(c.Resolve<ILifetimeScope>()); //subscribe consumers
                 });
-
             })).As<IBusControl>().As<IBus>().SingleInstance();
         }
     }

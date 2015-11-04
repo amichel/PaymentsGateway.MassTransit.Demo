@@ -17,73 +17,41 @@
                     <select data-bind="options:availableCreditCards, optionsText:'last4', value:creditCard" class="form-control"></select>
                 </div>
                 <div class="col-md-6 form-group">
-                    <input type="text" data-bind="value:nameOnCard" class="form-control" placeholder="Name On The Card" disabled="disabled" />
+                    <input type="text" data-bind="value:nameOnCard" class="form-control" placeholder="Name On The Card" disabled="disabled"/>
                 </div>
                 <div class="col-md-6 form-group">
-                    <input type="text" data-bind="value: expirationDate" class="form-control" placeholder="Expiration Date" disabled="disabled" />
+                    <input type="text" data-bind="value: expirationDate" class="form-control" placeholder="Expiration Date" disabled="disabled"/>
                 </div>
                 <div class="col-md-6 form-group">
                     <select data-bind="value: currency, options:availableCurrencies" class="form-control"></select>
                 </div>
                 <div class="col-md-6 form-group">
-                    <input type="number" data-bind="value: amount" placeholder="Amount to deposit" class="form-control" />
+                    <input type="number" data-bind="value: amount" placeholder="Amount to deposit" class="form-control"/>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-12 form-group">
-                    <button id="deposit" data-bind="click: deposit" class="pull-right btn-danger">Deposit</button>
+                    <button id="deposit" data-bind="click: deposit" class="pull-right btn-danger">
+                        <span class="glyphicon paymentState" data-bind="css: paymentState"></span>
+                        Deposit
+                    </button>
                 </div>
             </div>
-
-            <div data-bind="foreach: notifications">
-                <div class="row form-group">
-                    <span data-bind="text:$data"></span>
-                </div>
-            </div>
+        </div>
+    </div>
+    <div class="bg-grey" data-bind="foreach: notifications">
+        <div>
+            <span data-bind="text:$data"></span>
         </div>
     </div>
 </div>
 
 
 <script src="~/Scripts/libs/hubs.js"></script>
+<script src="~/Scripts/PaymentsDal.js"></script>
 <script type="text/javascript">
-    var PaymentsDal = function (callback,monitoringCb) {
-        var connection = $.connection;
-        var hub = connection.paymentsHub;
-        var monitoringCallback = monitoringCb||function() {};
-        connection.hub.disconnected(function() {
-            setTimeout(function() {
-                connection.hub.start();
-            }, 1); // Restart connection after 5 seconds.
-        });
-
-        function switchAccount(accountNumber) {
-            connection.hub.stop();
-            connection.hub.qs = { AccountNumber: accountNumber };
-            connection.hub.start();
-        }
-
-        // Create a callback function that the hub can call to send response from bus consumer
-        hub.client.onDepositResponse = function (response) {
-            console.trace("push notif response", response);
-            callback(response);
-        };
-        hub.client.onMonitoringEvent = monitoringCallback;
-
-        // Start the connection.
-        var starting = connection.hub.start();
-        return {
-            starting: starting,
-            payWithCreditCard: function (ccInfo) {
-                var result = hub.server.ccDeposit({ AccountNumber: ccInfo.accountNumber, CardId: ccInfo.cardId, Amount: ccInfo.amount, Currency: ccInfo.currency });
-                return result;
-            },
-            switchAccount: switchAccount
-        };
-    };
-
-    var depositVM = (function (ko, $) {
+    var depositVM = (function (ko) {
         var paymentsDal = PaymentsDal(handlePaymentResponse, handleMonitoringEvent);
         var availableCreditCards = [
             { id: 100, accountNumber: 100, last4: "xxxxxxxxxxxx1234", nameOnCard: "Silviu Eigel", expirationDate: new Date(2015, 11, 11) },
@@ -92,16 +60,17 @@
 
         var creditCard = ko.observable(availableCreditCards[0]);
 
-        creditCard.subscribe(function(val) {
+        creditCard.subscribe(function (val) {
             paymentsDal.switchAccount(val.accountNumber);
         });
-        
+
         paymentsDal.switchAccount(creditCard().accountNumber);
 
         var availableCurrencies = ['USD', 'EUR', 'GBP'];
         var currency = ko.observable(),
             amount = ko.observable().extend({ required: true, min: 1 }),
-            notifications = ko.observableArray([]);
+            notifications = ko.observableArray([]),
+            paymentState = ko.observable();
 
         function deposit() {
             notifications.removeAll();
@@ -118,32 +87,36 @@
         }
 
         function handlePaymentResponse(res) {
-                if (res.Status === 0) {
-                console.log('Your deposit is pending! Reference Number:'+ res.TransactionId);
-                } else if (res.Status === 2) {
-                console.log('Your deposit is successful! Reference Number:'+res.TransactionId);
+            if (res.Status === 0) {
+                paymentState("glyphicon-time");
+                console.log('Your deposit is pending! Reference Number:' + res.TransactionId);
+            } else if (res.Status === 2) {
+                paymentState("glyphicon-ok");
+                console.log('Your deposit is successful! Reference Number:' + res.TransactionId);
 
-                } else {
-                    console.log('Your deposit failed because:' + res.ErrorMessage);
-                }
+            } else {
+                paymentState("glyphicon-remove");
+                console.log('Your deposit failed because:' + res.ErrorMessage);
+            }
         }
 
         return {
             availableCreditCards: availableCreditCards,
             creditCard: creditCard,
-            nameOnCard: ko.computed(function() {
+            nameOnCard: ko.computed(function () {
                 return creditCard().nameOnCard;
             }),
-            expirationDate: ko.computed(function() {
+            expirationDate: ko.computed(function () {
                 return creditCard().expirationDate.toLocaleDateString();
             }),
             availableCurrencies: availableCurrencies,
             currency: currency,
             amount: amount,
             notifications: notifications,
+            paymentState: paymentState,
             deposit: deposit
         };
-    })(ko, $);
+    })(ko);
 
 
     $(function () {

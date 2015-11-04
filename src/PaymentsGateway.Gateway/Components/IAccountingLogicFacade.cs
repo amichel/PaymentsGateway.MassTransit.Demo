@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using PaymentsGateway.Contracts;
 
-namespace PaymentsGateway.Gateway
+namespace PaymentsGateway.Gateway.Components
 {
     public interface IAccountingLogicFacade : ICustomerBalance
     {
-
     }
 
     public class AccountingLogicFacade : IAccountingLogicFacade

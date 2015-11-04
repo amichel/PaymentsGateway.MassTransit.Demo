@@ -2,7 +2,7 @@
 using System.Configuration;
 using Automatonymous;
 
-namespace GatewayService
+namespace PaymentsGateway.GatewayService
 {
     internal class ServiceRequestSettings : RequestSettings
     {
@@ -12,12 +12,12 @@ namespace GatewayService
 
         public static ServiceRequestSettings ClearingRequestSettings()
         {
-            return new ServiceRequestSettings()
-            {
-                SchedulingServiceAddress = new Uri(ConfigurationManager.AppSettings["SchedulingServiceAddress"]),
-                ServiceAddress = new Uri(ConfigurationManager.AppSettings["ClearingServiceAddress"]),
-                Timeout = new TimeSpan(0, 0, 0, int.Parse(ConfigurationManager.AppSettings["ClearingRequestTimeout"]))
-            };
+            return new ServiceRequestSettings
+                {
+                    SchedulingServiceAddress = new Uri(ConfigurationManager.AppSettings["SchedulingServiceAddress"]),
+                    ServiceAddress = new Uri(ConfigurationManager.AppSettings["ClearingServiceAddress"]),
+                    Timeout = new TimeSpan(0, 0, 0, int.Parse(ConfigurationManager.AppSettings["ClearingRequestTimeout"]))
+                };
         }
     }
 }

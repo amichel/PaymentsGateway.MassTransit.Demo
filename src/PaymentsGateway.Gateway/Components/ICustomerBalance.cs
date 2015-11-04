@@ -1,7 +1,7 @@
 ﻿using System;
 using PaymentsGateway.Contracts;
 
-namespace PaymentsGateway.Gateway
+namespace PaymentsGateway.Gateway.Components
 {
     public interface ICustomerBalance
     {

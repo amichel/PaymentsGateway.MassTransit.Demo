@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using Automatonymous;
+using GatewayService;
 using MassTransit;
-using MassTransit.QuartzIntegration;
-using MassTransit.RabbitMqTransport;
 using MassTransit.Saga;
-using PaymentsGateway.Contracts;
 using PaymentsGateway.Gateway;
 using Topshelf;
-using Topshelf.Logging;
 
-namespace GatewayService
+namespace PaymentsGateway.GatewayService
 {
     public class GatewayService : ServiceControl
     {
@@ -21,11 +15,6 @@ namespace GatewayService
         BusHandle _busHandle;
         GatewaySaga _machine;
         Lazy<ISagaRepository<GatewaySagaState>> _repository;
-
-        public GatewayService()
-        {
-
-        }
 
         private void ConfigureServiceBus()
         {

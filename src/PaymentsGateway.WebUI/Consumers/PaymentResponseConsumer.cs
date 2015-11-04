@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using PaymentsGateway.Contracts;
@@ -21,7 +17,9 @@ namespace PaymentsGateway.WebUI.Consumers
 
         public Task Consume(ConsumeContext<CcDepositResponse> context)
         {
-            _connectionManager.GetHubContext<PaymentsHub>().Clients.User(context.Message.AccountNumber.ToString()).onDepositResponse(context.Message);
+            _connectionManager.GetHubContext<PaymentsHub>()
+                .Clients.User(context.Message.AccountNumber.ToString())
+                .onDepositResponse(context.Message);
             return Task.CompletedTask;
         }
     }

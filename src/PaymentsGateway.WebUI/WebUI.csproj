@@ -207,15 +207,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Index.html" />
-    <Content Include="Scripts\constants.js" />
-    <Content Include="Scripts\creditCardActions.js" />
     <Content Include="Scripts\libs\bootstrap.js" />
     <Content Include="Scripts\libs\bootstrap.min.js" />
-    <Content Include="package.json" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <None Include="Scripts\libs\jquery-2.1.4.intellisense.js" />
-    <Content Include="Scripts\components\creditCardDeposit.index.js" />
-    <Content Include="Scripts\components\payments\creditCardDeposit.js" />
     <Content Include="Scripts\libs\hubs.js" />
     <Content Include="Scripts\libs\jquery-2.1.4.js" />
     <Content Include="Scripts\libs\jquery-2.1.4.min.js" />
@@ -232,11 +229,8 @@
     <Content Include="Scripts\libs\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\libs\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\libs\respond.min.js" />
-    <Content Include="Scripts\paymentHub.js" />
-    <Content Include="Scripts\reducers.js" />
-    <Content Include="Scripts\paymentStore.js" />
+    <Content Include="Scripts\PaymentsDal.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="server.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -249,19 +243,10 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Payments\CreditCardDeposit.cshtml" />
-    <Content Include="webpack.config.prod.js" />
-    <Content Include="webpack.config.dev.js" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
-    <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PaymentsGateway.Contracts\Contracts.csproj">

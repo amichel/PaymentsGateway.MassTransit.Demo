@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Threading.Tasks;
 using MassTransit;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using PaymentsGateway.Contracts;
@@ -22,7 +18,8 @@ namespace PaymentsGateway.WebUI.Consumers
         public Task Consume(ConsumeContext<SagaMonitoringEvent> context)
         {
             var log = context.Message.ToLogString();
-            var hostInfo = $"Machine={context.Host.MachineName},ProcessId={context.Host.ProcessId},ProcessName={context.Host.ProcessName},OS={context.Host.OperatingSystemVersion}";
+            var hostInfo =
+                $"Machine={context.Host.MachineName},ProcessId={context.Host.ProcessId},ProcessName={context.Host.ProcessName},OS={context.Host.OperatingSystemVersion}";
             _connectionManager.GetHubContext<PaymentsHub>().Clients.All.onMonitoringEvent($"{log},{hostInfo}");
             return Task.CompletedTask;
         }

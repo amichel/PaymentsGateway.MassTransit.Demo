@@ -7,7 +7,7 @@ using MassTransit.TestFramework;
 using NSubstitute;
 using NUnit.Framework;
 using PaymentsGateway.Contracts;
-using PaymentsGateway.Gateway;
+using PaymentsGateway.Gateway.Components;
 
 namespace PaymentsGateway.Clearing.Tests
 {
@@ -18,7 +18,6 @@ namespace PaymentsGateway.Clearing.Tests
         public void Setup()
         {
             _clearingApi.ClearReceivedCalls();
-            _client = new MessageRequestClient<AuthorizationRequest, AuthorizationResponse>(Bus, InputQueueAddress, TestTimeout);
         }
 
         protected override void ConfigureInputQueueEndpoint(IReceiveEndpointConfigurator configurator)
@@ -32,7 +31,6 @@ namespace PaymentsGateway.Clearing.Tests
 
         private ClearingSaga _machine;
         private InMemorySagaRepository<ClearingSagaState> _repository;
-        private IRequestClient<AuthorizationRequest, AuthorizationResponse> _client;
         private IClearingApi _clearingApi;
 
 
@@ -41,10 +39,9 @@ namespace PaymentsGateway.Clearing.Tests
         {
             var sagaId = Guid.NewGuid();
             _clearingApi.ProcessRequest(Arg.Any<AuthorizationRequest>()).Returns(new AuthorizationResponse());
-            Task<AuthorizationResponse> response;
             var req = await Bus.Request(InputQueueAddress, new AuthorizationRequest {TransactionId = sagaId}, x =>
             {
-                response = x.Handle<AuthorizationResponse>();
+                x.Handle<AuthorizationResponse>();
                 x.Timeout = TestTimeout;
             }, TestCancellationToken);
             await req.Task;
@@ -61,10 +58,9 @@ namespace PaymentsGateway.Clearing.Tests
             var sagaId = Guid.NewGuid();
             _clearingApi.ProcessRequest(Arg.Any<AuthorizationRequest>()).Returns(new AuthorizationResponse());
             var authorizationRequest = new AuthorizationRequest {TransactionId = sagaId};
-            Task<AuthorizationResponse> response;
             var req = await Bus.Request(InputQueueAddress, authorizationRequest, x =>
             {
-                response = x.Handle<AuthorizationResponse>();
+                x.Handle<AuthorizationResponse>();
                 x.Timeout = TestTimeout;
             }, TestCancellationToken);
 
@@ -125,6 +121,7 @@ namespace PaymentsGateway.Clearing.Tests
                         ClearingStatus = ClearingStatus.Authorized
                     });
         }
+
         private void ClearingApiRejectsSettlement()
         {
             _clearingApi.ProcessRequest(Arg.Any<SettlementRequest>())
@@ -156,7 +153,7 @@ namespace PaymentsGateway.Clearing.Tests
             ClearingApiAuthorizesSettlement();
 
             Task<AuthorizationResponse> authorizationResponseTask = null;
-            await Bus.Request(InputQueueAddress, new AuthorizationRequest { TransactionId = transactionId }, x =>
+            await Bus.Request(InputQueueAddress, new AuthorizationRequest {TransactionId = transactionId}, x =>
             {
                 authorizationResponseTask = x.Handle<AuthorizationResponse>();
                 x.Timeout = TestTimeout;
@@ -182,7 +179,7 @@ namespace PaymentsGateway.Clearing.Tests
             ClearingApiRejectsSettlement();
 
             Task<AuthorizationResponse> authorizationResponseTask = null;
-            await Bus.Request(InputQueueAddress, new AuthorizationRequest { TransactionId = transactionId }, x =>
+            await Bus.Request(InputQueueAddress, new AuthorizationRequest {TransactionId = transactionId}, x =>
             {
                 authorizationResponseTask = x.Handle<AuthorizationResponse>();
                 x.Timeout = TestTimeout;

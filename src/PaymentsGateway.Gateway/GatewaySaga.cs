@@ -1,10 +1,7 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using Automatonymous;
-using Automatonymous.Binders;
+﻿using Automatonymous;
 using MassTransit;
 using PaymentsGateway.Contracts;
+using PaymentsGateway.Gateway.Components;
 
 namespace PaymentsGateway.Gateway
 {

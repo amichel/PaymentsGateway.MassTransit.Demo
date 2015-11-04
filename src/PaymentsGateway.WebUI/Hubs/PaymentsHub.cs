@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using MassTransit;
 using Microsoft.AspNet.SignalR;
 using PaymentsGateway.Contracts;
@@ -24,13 +20,14 @@ namespace PaymentsGateway.WebUI.Hubs
         {
             try
             {
-                var client = _bus.CreateRequestClient<CcDepositRequest, CcDepositResponse>(new Uri(ConfigurationManager.AppSettings["GatewayServiceAddress"]), new TimeSpan(0, 0, 0, 30));
+                var client =
+                    _bus.CreateRequestClient<CcDepositRequest, CcDepositResponse>(
+                        new Uri(ConfigurationManager.AppSettings["GatewayServiceAddress"]), new TimeSpan(0, 0, 0, 30));
                 return await client.Request(request);
             }
             catch (RequestTimeoutException)
             {
-                //TODO: log
-                return new CcDepositResponse() { AccountNumber = request.AccountNumber, Status = DepositStatus.Timedout };
+                return new CcDepositResponse {AccountNumber = request.AccountNumber, Status = DepositStatus.Timedout};
             }
         }
     }

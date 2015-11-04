@@ -25,11 +25,11 @@ namespace PaymentsGateway.WebUI
         {
             // Call our IoC static helper method to start the typical Autofac SignalR setup
             var container = RegisterDependencies();
-            
+
             // Get your HubConfiguration. In OWIN, we create one rather than using GlobalHost
             // Sets the dependency resolver to be autofac.
-            var hubConfig = new HubConfiguration { Resolver = new AutofacDependencyResolver(container) };
-            
+            var hubConfig = new HubConfiguration {Resolver = new AutofacDependencyResolver(container)};
+
             // OWIN SIGNALR SETUP:
             // Register the Autofac middleware FIRST, then the standard SignalR middleware.
             app.UseAutofacMiddleware(container);
@@ -37,9 +37,7 @@ namespace PaymentsGateway.WebUI
 
             var builder = new ContainerBuilder();
             var connManager = hubConfig.Resolver.Resolve<IConnectionManager>();
-            builder.RegisterInstance(connManager)
-                .As<IConnectionManager>()
-                .SingleInstance();
+            builder.RegisterInstance(connManager).As<IConnectionManager>().SingleInstance();
             builder.Update(container);
 
             // Starts the bus.

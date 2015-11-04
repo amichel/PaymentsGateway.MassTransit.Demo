@@ -1,12 +1,11 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Automatonymous;
 using MassTransit;
 using PaymentsGateway.Contracts;
 using PaymentsGateway.Gateway;
 
-namespace GatewayService
+namespace PaymentsGateway.GatewayService
 {
     internal class StateMachineObserver : EventObserver<GatewaySagaState>, StateObserver<GatewaySagaState>
     {
