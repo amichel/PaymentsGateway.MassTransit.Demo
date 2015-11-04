@@ -30,19 +30,17 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-12 form-group">
+                <div class="col-md-11">
                     <button id="deposit" data-bind="click: deposit" class="pull-right btn">
                         <span class="glyphicon paymentState" data-bind="css: paymentState"></span>
                         Deposit
                     </button>
                 </div>
-            </div>
         </div>
     </div>
     <div class="bg-grey" data-bind="foreach: notifications">
         <div>
-            <span data-bind="text:$data"></span>
+            <p data-bind="text:$data"></p>
         </div>
     </div>
 </div>
