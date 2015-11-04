@@ -37,7 +37,9 @@
             </div>
 
             <div data-bind="foreach: notifications">
-                <div>$data</div>
+                <div class="row form-group">
+                    <span data-bind="text:$data"></span>
+                </div>
             </div>
         </div>
     </div>
@@ -46,9 +48,10 @@
 
 <script src="~/Scripts/libs/hubs.js"></script>
 <script type="text/javascript">
-    var PaymentsDal = function (callback) {
+    var PaymentsDal = function (callback,monitoringCb) {
         var connection = $.connection;
         var hub = connection.paymentsHub;
+        var monitoringCallback = monitoringCb||function() {};
         connection.hub.disconnected(function() {
             setTimeout(function() {
                 connection.hub.start();
@@ -66,10 +69,7 @@
             console.trace("push notif response", response);
             callback(response);
         };
-
-        hub.client.onMonitoringEvent = function(log) {
-            console.trace(log);
-        };
+        hub.client.onMonitoringEvent = monitoringCallback;
 
         // Start the connection.
         var starting = connection.hub.start();
@@ -84,7 +84,7 @@
     };
 
     var depositVM = (function (ko, $) {
-        var paymentsDal = PaymentsDal(handlePaymentResponse);
+        var paymentsDal = PaymentsDal(handlePaymentResponse, handleMonitoringEvent);
         var availableCreditCards = [
             { id: 100, accountNumber: 100, last4: "xxxxxxxxxxxx1234", nameOnCard: "Silviu Eigel", expirationDate: new Date(2015, 11, 11) },
             { id: 101, accountNumber: 101, last4: "xxxxxxxxxxxx6789", nameOnCard: "Alex Michel", expirationDate: new Date(2016, 10, 10) }
@@ -113,35 +113,34 @@
             }, handlePaymentResponse).done(handlePaymentResponse);
         }
 
+        function handleMonitoringEvent(res) {
+            notifications.push(res);
+        }
+
         function handlePaymentResponse(res) {
-            var notificationText = "Deposit is now in status: " + res.Status + "; " + (res.ErrorMessage && "Error occured:" + res.ErrorMessage);
-            notifications.push(res.Status + res.ErrorMessage);
-                console.trace("response ", res);
                 if (res.Status === 0) {
                 console.log('Your deposit is pending! Reference Number:'+ res.TransactionId);
                 } else if (res.Status === 2) {
                 console.log('Your deposit is successful! Reference Number:'+res.TransactionId);
-                alert('Your deposit is successful! Reference Number:'+ res.TransactionId);
 
                 } else {
                     console.log('Your deposit failed because:' + res.ErrorMessage);
-                    alert('Your deposit failed because:' +res.ErrorMessage);
-                    
                 }
         }
 
         return {
             availableCreditCards: availableCreditCards,
             creditCard: creditCard,
-            nameOnCard: ko.computed(function () {
+            nameOnCard: ko.computed(function() {
                 return creditCard().nameOnCard;
             }),
-            expirationDate: ko.computed(function () {
+            expirationDate: ko.computed(function() {
                 return creditCard().expirationDate.toLocaleDateString();
             }),
             availableCurrencies: availableCurrencies,
             currency: currency,
             amount: amount,
+            notifications: notifications,
             deposit: deposit
         };
     })(ko, $);
