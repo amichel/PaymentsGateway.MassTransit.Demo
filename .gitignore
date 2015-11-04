@@ -232,3 +232,4 @@ $RECYCLE.BIN/
 *.lnk
 src/PaymentsGateway.Gateway/.vs/config/applicationhost.config
 src/PaymentsGateway.Gateway/.vs/config/applicationhost.config
+*.db
