@@ -57,20 +57,19 @@
             { id: 100, accountNumber: 100, last4: "xxxxxxxxxxxx1234", nameOnCard: "Silviu Eigel", expirationDate: new Date(2015, 11, 11) },
             { id: 101, accountNumber: 101, last4: "xxxxxxxxxxxx6789", nameOnCard: "Alex Michel", expirationDate: new Date(2016, 10, 10) }
         ];
+        var availableCurrencies = ['USD', 'EUR', 'GBP'];
 
-        var creditCard = ko.observable(availableCreditCards[0]);
+        var creditCard = ko.observable(availableCreditCards[0]),
+            currency = ko.observable(),
+            amount = ko.observable().extend({ required: true, min: 1 }),
+            notifications = ko.observableArray([]),
+            paymentState = ko.observable();
 
         creditCard.subscribe(function (val) {
             paymentsDal.switchAccount(val.accountNumber);
         });
 
         paymentsDal.switchAccount(creditCard().accountNumber);
-
-        var availableCurrencies = ['USD', 'EUR', 'GBP'];
-        var currency = ko.observable(),
-            amount = ko.observable().extend({ required: true, min: 1 }),
-            notifications = ko.observableArray([]),
-            paymentState = ko.observable();
 
         function deposit() {
             notifications.removeAll();
@@ -93,7 +92,6 @@
             } else if (res.Status === 2) {
                 paymentState("glyphicon-ok");
                 console.log('Your deposit is successful! Reference Number:' + res.TransactionId);
-
             } else {
                 paymentState("glyphicon-remove");
                 console.log('Your deposit failed because:' + res.ErrorMessage);
