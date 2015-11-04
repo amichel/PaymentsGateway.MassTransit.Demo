@@ -65,6 +65,10 @@
             callback(response);
         };
 
+        hub.client.onMonitoringEvent = function(log) {
+            console.trace(log);
+        };
+
         // Start the connection.
         const starting = connection.hub.start();
         return {

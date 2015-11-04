@@ -53,19 +53,23 @@ namespace GatewayService
             _machine = new GatewaySagaBuilder().WithDefaultImplementation()
                                                             .WithClearingRequestSettings(ServiceRequestSettings.ClearingRequestSettings())
                                                             .Build();
-#if DEBUG
-            var observer = new StateMachineObserver();
+            _repository = new Lazy<ISagaRepository<GatewaySagaState>>(() => new InMemorySagaRepository<GatewaySagaState>());
+        }
+
+        private void ConnectObserver()
+        {
+            var observer = new StateMachineObserver(_busControl);
             _machine.ConnectEventObserver(observer);
             _machine.ConnectStateObserver(observer);
-#endif
-            _repository = new Lazy<ISagaRepository<GatewaySagaState>>(() => new InMemorySagaRepository<GatewaySagaState>());
         }
 
         public bool Start(HostControl hostControl)
         {
             ConfigureSaga();
             ConfigureServiceBus();
-
+#if DEBUG
+            ConnectObserver();
+#endif
             //_busControl.Publish(new CcDepositRequest() { AccountNumber = 111, Amount = 500, CardId = 2, Currency = "EUR" });
 
             return true;
