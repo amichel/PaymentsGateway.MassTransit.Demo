@@ -233,3 +233,4 @@ $RECYCLE.BIN/
 src/PaymentsGateway.Gateway/.vs/config/applicationhost.config
 src/PaymentsGateway.Gateway/.vs/config/applicationhost.config
 *.db
+MassTransit.QuartzService/MassTransitScheduling.db
