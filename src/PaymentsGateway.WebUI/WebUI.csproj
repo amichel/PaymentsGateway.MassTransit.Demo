@@ -69,19 +69,19 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MassTransit, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
-      <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.3.0.14\lib\net45\MassTransit.dll</HintPath>
+      <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.3.0.15\lib\net45\MassTransit.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MassTransit.AutofacIntegration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
-      <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.Autofac.3.0.14\lib\net45\MassTransit.AutofacIntegration.dll</HintPath>
+      <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.Autofac.3.0.15\lib\net45\MassTransit.AutofacIntegration.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MassTransit.AutomatonymousIntegration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
-      <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.Automatonymous.3.0.14\lib\net45\MassTransit.AutomatonymousIntegration.dll</HintPath>
+      <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.Automatonymous.3.0.15\lib\net45\MassTransit.AutomatonymousIntegration.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MassTransit.RabbitMqTransport, Version=3.0.0.0, Culture=neutral, PublicKeyToken=b8e0e9f2f1e657fa, processorArchitecture=MSIL">
-      <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.RabbitMQ.3.0.14\lib\net45\MassTransit.RabbitMqTransport.dll</HintPath>
+      <HintPath>..\PaymentsGateway.Gateway\packages\MassTransit.RabbitMQ.3.0.15\lib\net45\MassTransit.RabbitMqTransport.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -286,7 +286,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>4310</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:82/</IISUrl>
+          <IISUrl>http://localhost:8200/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -1,4 +1,4 @@
-﻿$cred =  (Get-Credential -UserName rbmq -Message "Please enter RBMQ password")
+﻿$cred =  (Get-Credential -UserName alex -Message "Please enter RBMQ password")
 $rbmqApi = 'rabbit.local:15672'
 $vhost = 'payments'
  iwr -ContentType 'application/json' -Method Get -Credential $cred http://$rbmqApi/api/queues/$vhost | % { 
