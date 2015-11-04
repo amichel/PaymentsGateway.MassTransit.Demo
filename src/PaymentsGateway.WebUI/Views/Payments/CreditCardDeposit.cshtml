@@ -31,8 +31,8 @@
             </div>
 
             <div class="row">
-                <div class="col-md-12 form-group">
-                    <button id="deposit" data-bind="click: deposit" class="pull-right btn-danger">Deposit</button>
+                <div class="col-md-10 form-group">
+                    <button id="deposit" data-bind="click: deposit" class="pull-right btn-danger">Deposit</button><span  data-bind="text:paymentStatus"></span>
                 </div>
             </div>
 
@@ -101,7 +101,8 @@
         var availableCurrencies = ['USD', 'EUR', 'GBP'];
         var currency = ko.observable(),
             amount = ko.observable().extend({ required: true, min: 1 }),
-            notifications = ko.observableArray([]);
+            notifications = ko.observableArray([]),
+            paymentStatus = ko.observable();
 
         function deposit() {
             notifications.removeAll();
@@ -119,12 +120,14 @@
 
         function handlePaymentResponse(res) {
                 if (res.Status === 0) {
+                    paymentStatus("pending");
                 console.log('Your deposit is pending! Reference Number:'+ res.TransactionId);
                 } else if (res.Status === 2) {
                 console.log('Your deposit is successful! Reference Number:'+res.TransactionId);
-
+                    paymentStatus("success");
                 } else {
                     console.log('Your deposit failed because:' + res.ErrorMessage);
+                    paymentStatus("failed");
                 }
         }
 
@@ -141,6 +144,7 @@
             currency: currency,
             amount: amount,
             notifications: notifications,
+            paymentStatus: paymentStatus,
             deposit: deposit
         };
     })(ko, $);
