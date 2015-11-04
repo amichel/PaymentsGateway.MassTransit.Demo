@@ -41,18 +41,23 @@ namespace ClearingService
         private void ConfigureSaga()
         {
             _machine = new ClearingSaga(new ClearingApiAdaptor());
-#if DEBUG
-            var observer = new StateMachineObserver();
-            _machine.ConnectEventObserver(observer);
-            _machine.ConnectStateObserver(observer);
-#endif
             _repository = new Lazy<ISagaRepository<ClearingSagaState>>(() => new InMemorySagaRepository<ClearingSagaState>());
         }
+
+        private void ConnectObserver()
+        {
+            var observer = new StateMachineObserver(_busControl);
+            _machine.ConnectEventObserver(observer);
+            _machine.ConnectStateObserver(observer);
+        }
+
         public void Start()
         {
             ConfigureSaga();
             ConfigureServiceBus();
-
+#if DEBUG
+            ConnectObserver();
+#endif
             //var client = _busControl.CreateRequestClient<AuthorizationRequest, AuthorizationResponse>(new Uri("rabbitmq://rabbit.local/payments/clearing"), new TimeSpan(0, 0, 1, 0));
             //var response = await client.Request(new AuthorizationRequest() { AccountNumber = 111, Amount = 100, CardToken = "ZZZ", CardType = CardType.MasterCard, Currency = "EUR", TransactionId = NewId.NextGuid() });
         }

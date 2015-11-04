@@ -72,15 +72,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClearingRequestFactory.cs" />
-    <Compile Include="CustomerBalance.cs" />
+    <Compile Include="Components\ClearingRequestFactory.cs" />
+    <Compile Include="Components\CustomerBalance.cs" />
     <Compile Include="GatewaySaga.cs" />
-    <Compile Include="DepositResponseFactory.cs" />
+    <Compile Include="Components\DepositResponseFactory.cs" />
     <Compile Include="GatewaySagaBuilder.cs" />
     <Compile Include="GatewaySagaState.cs" />
-    <Compile Include="IAccountingLogicFacade.cs" />
-    <Compile Include="IClearingRequestFactory.cs" />
-    <Compile Include="ICustomerBalance.cs" />
+    <Compile Include="Components\IAccountingLogicFacade.cs" />
+    <Compile Include="Components\IClearingRequestFactory.cs" />
+    <Compile Include="Components\ICustomerBalance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
