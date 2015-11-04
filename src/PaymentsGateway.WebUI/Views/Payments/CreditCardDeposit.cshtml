@@ -35,6 +35,10 @@
                     <button id="deposit" data-bind="click: deposit" class="pull-right btn-danger">Deposit</button>
                 </div>
             </div>
+
+            <div data-bind="foreach: notifications">
+                <div>$data</div>
+            </div>
         </div>
     </div>
 </div>
@@ -57,8 +61,6 @@
             connection.hub.start();
         }
 
-        //TODO: no reconnects/etc...
-
         // Create a callback function that the hub can call to send response from bus consumer
         hub.client.onDepositResponse = function (response) {
             console.trace("push notif response", response);
@@ -66,11 +68,11 @@
         };
 
         // Start the connection.
-        const starting = connection.hub.start();
+        var starting = connection.hub.start();
         return {
             starting: starting,
             payWithCreditCard: function (ccInfo) {
-                const result = hub.server.ccDeposit({ AccountNumber: ccInfo.accountNumber, CardId: ccInfo.cardId, Amount: ccInfo.amount, Currency: ccInfo.currency });
+                var result = hub.server.ccDeposit({ AccountNumber: ccInfo.accountNumber, CardId: ccInfo.cardId, Amount: ccInfo.amount, Currency: ccInfo.currency });
                 return result;
             },
             switchAccount: switchAccount
@@ -79,7 +81,7 @@
 
     var depositVM = (function (ko, $) {
         var paymentsDal = PaymentsDal(handlePaymentResponse);
-        const availableCreditCards = [
+        var availableCreditCards = [
             { id: 100, accountNumber: 100, last4: "xxxxxxxxxxxx1234", nameOnCard: "Silviu Eigel", expirationDate: new Date(2015, 11, 11) },
             { id: 101, accountNumber: 101, last4: "xxxxxxxxxxxx6789", nameOnCard: "Alex Michel", expirationDate: new Date(2016, 10, 10) }
         ];
@@ -92,11 +94,13 @@
         
         paymentsDal.switchAccount(creditCard().accountNumber);
 
-        const availableCurrencies = ['USD', 'EUR', 'GBP'];
+        var availableCurrencies = ['USD', 'EUR', 'GBP'];
         var currency = ko.observable(),
-            amount = ko.observable().extend({ required: true, min: 1 });
+            amount = ko.observable().extend({ required: true, min: 1 }),
+            notifications = ko.observableArray([]);
 
         function deposit() {
+            notifications.removeAll();
             paymentsDal.payWithCreditCard({
                 accountNumber: creditCard().accountNumber,
                 cardId: creditCard().id,
@@ -106,6 +110,8 @@
         }
 
         function handlePaymentResponse(res) {
+            var notificationText = "Deposit is now in status: " + res.Status + "; " + (res.ErrorMessage && "Error occured:" + res.ErrorMessage);
+            notifications.push(res.Status + res.ErrorMessage);
                 console.trace("response ", res);
                 if (res.Status === 0) {
                 console.log('Your deposit is pending! Reference Number:'+ res.TransactionId);
