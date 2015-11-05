@@ -34,7 +34,6 @@ namespace PaymentsGateway.WebUI.IOC
                 {
                     e.AutoDelete = true;
                     e.Exclusive = true;
-                    e.PrefetchCount = (ushort) Environment.ProcessorCount;
                     e.LoadFrom(c.Resolve<ILifetimeScope>()); //subscribe consumers
                 });
             })).As<IBusControl>().As<IBus>().SingleInstance();

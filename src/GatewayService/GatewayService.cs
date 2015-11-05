@@ -29,7 +29,6 @@ namespace PaymentsGateway.GatewayService
                 x.ReceiveEndpoint(host, "gateway", e =>
                 {
                     e.Durable = true;
-                    e.PrefetchCount = (ushort)Environment.ProcessorCount;
                     e.StateMachineSaga(_machine, _repository.Value);
                 });
             });
