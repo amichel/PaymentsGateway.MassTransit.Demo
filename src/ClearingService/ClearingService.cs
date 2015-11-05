@@ -30,7 +30,6 @@ namespace ClearingService
                 x.ReceiveEndpoint(host, "clearing", e =>
                 {
                     e.Durable = true;
-                    e.PrefetchCount = (ushort)Environment.ProcessorCount;
                     e.StateMachineSaga(_machine, _repository.Value);
                 });
             });
