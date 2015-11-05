@@ -53,5 +53,20 @@ namespace PaymentsGateway.GatewayService.Tests
 
             await _repository.ShouldContainSaga(x => Equals(x.CurrentState, _machine.AuthorizationFlow.Pending), TestTimeout);
         }
+
+        [Test]
+        public async Task Repsonds_with_Pending_message()
+        {
+            var newCcDepositRequest = NewCcDepositRequest();
+            Task<CcDepositResponse> response = null;
+            var req = await Bus.Request(InputQueueAddress, newCcDepositRequest, x =>
+            {
+                response = x.Handle<CcDepositResponse>();
+                x.Timeout = TestTimeout;
+            }, TestCancellationToken);
+            await req.Task;
+            var r = await response;
+            Assert.That(r.Status,Is.EqualTo(DepositStatus.Pending));
+        }
     }
 }
