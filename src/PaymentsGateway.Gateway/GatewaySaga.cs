@@ -10,7 +10,6 @@ namespace PaymentsGateway.Gateway
         private readonly IDepositResponseFactory _responseFactory;
         private readonly IClearingRequestFactory _clearingRequestFactory;
 
-        //TODO: resolve components with IOC
         public GatewaySaga(IDepositResponseFactory responseFactory, IClearingRequestFactory clearingRequestFactory, IAccountingLogicFacade accountingLogic, RequestSettings clearingRequestSettings)
         {
             _responseFactory = responseFactory;
@@ -69,7 +68,6 @@ namespace PaymentsGateway.Gateway
             Finally(context => context.Publish(x => x.Instance.Response));
 
             SetCompletedWhenFinalized();
-            //TODO: Example of compensation
         }
 
         public Request<GatewaySagaState, AuthorizationRequest, AuthorizationResponse> AuthorizationFlow { get; private set; }

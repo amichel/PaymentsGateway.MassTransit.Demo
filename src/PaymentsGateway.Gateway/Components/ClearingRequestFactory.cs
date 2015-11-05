@@ -12,8 +12,8 @@ namespace PaymentsGateway.Gateway.Components
                     TransactionId = transactionId,
                     AccountNumber = request.AccountNumber,
                     Amount = request.Amount,
-                    CardToken = "ABC123", //TODO: Call Tokenization Service to get token for saved card id
-                    CardType = CardType.MasterCard, //TODO: Get card type from tokenization service
+                    CardToken = "ABC123",
+                    CardType = CardType.MasterCard,
                     Currency = request.Currency
                 };
         }
