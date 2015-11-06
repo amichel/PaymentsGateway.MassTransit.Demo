@@ -32,6 +32,7 @@ namespace ClearingService
                     e.Durable = true;
                     e.PrefetchCount = (ushort)Environment.ProcessorCount;
                     e.StateMachineSaga(_machine, _repository.Value);
+                    e.UseConsoleLog(async (ev, lc) => string.Format("Received message Id:{0} of type: {1}", ev.MessageId, string.Join(",",ev.SupportedMessageTypes)));
                 });
             });
 
