@@ -16,7 +16,7 @@ namespace PaymentsGateway.Clearing
         public AuthorizationResponse ProcessRequest(AuthorizationRequest request)
         {
             //Long 3rd party Api call
-            Thread.Sleep(request.Amount > 1000 ? 30000 : 1000);
+            Thread.Sleep(request.Amount > 1000 ? 30000 : 2000);
 
             var clearingStatus = request.AccountNumber % 2 == 0 ? ClearingStatus.Authorized : ClearingStatus.Rejected;
             return new AuthorizationResponse()
@@ -33,7 +33,7 @@ namespace PaymentsGateway.Clearing
         public SettlementResponse ProcessRequest(SettlementRequest request)
         {
             //Long 3rd party Api call
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
 
             var clearingStatus = ClearingStatus.Settled;
             return new SettlementResponse()
